@@ -1,0 +1,70 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<!-- 
+${ users }
+-->
+<div class="pure-form">
+	<fieldset>
+		<legend>
+			User Spring List
+		</legend>
+		<form>
+			查詢條件: 年齡大於等於
+			<input type="number" value="0" name="age">
+			<button type="submit">查詢</button>
+		</form>
+		<br>
+		<!-- 表單元素 -->
+		<table class="pure-table pure-table-bordered">
+			<thead>
+				<tr>
+					<th>id</th><th>姓名</th><th>性別</th><th>年齡</th><th>生日</th>
+					<th>教育程度</th><th>興趣</th><th>興趣</th><th>履歷資訊</th>
+					<th>修改</th><th>刪除</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${ users }" var="user">
+				<tr>
+					<td>${ user.id }</td>
+					<td>${ user.name }</td>
+					<td>${ user.sex.name }</td>
+					<td>${ user.age }</td>
+					<td>
+						<fmt:formatDate value="${ user.birth }" pattern="yyyy-MM-dd E" />
+					</td>
+					<td>${ user.education.name }</td>
+					<td>
+						<c:forEach items="${ user.interests }" var="interest">
+							${ interest.name }&nbsp;
+						</c:forEach>
+					</td>
+					<td>
+						${ user.interestNames }
+					</td>
+					<td>${ user.resume }</td>
+					<td>
+						<a href="${pageContext.request.contextPath}/mvc/user/${ user.id }">修改</a>
+					</td>
+					<td nowrap>
+						<!-- 刪除(Get method) -->
+						<a class="pure-button" href="${pageContext.request.contextPath}/mvc/user/delete/${ user.id }">刪除</a>
+						
+						<!-- 刪除(Delete method) + Javascript -->
+						<a class="pure-button" href="javascript:void(0);" onClick="deleteUser(${ user.id })">刪除</a>
+						
+						<!-- 刪除(Delete method) + Form + _method="DELETE" -->
+						<form method="POST" action="${pageContext.request.contextPath}/mvc/user/${ user.id }">
+							<input name="_method" type="hidden" value="DELETE" />
+							<button class="pure-button" type="submit">刪除</button>
+						</form>
+					</td>
+				</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+			
+	</fieldset>
+</div>

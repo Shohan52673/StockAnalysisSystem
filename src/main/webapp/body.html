@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>會議室預訂系統</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+</head>
+<body>
+
+<div class="container mt-5">
+    <h2>預訂列表</h2>
+
+    <!-- 预订表单 -->
+    <form id="bookRoomForm" class="mb-3">
+        <div class="form-row">
+            <div class="form-group col-md-2">
+                <label for="roomId">會議室ID：</label>
+                <input type="text" class="form-control" id="roomId" name="roomId" required>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="name">使用者名稱：</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="date">預訂日期：</label>
+                <input type="date" class="form-control" id="date" name="date" required>
+            </div>
+            <div class="form-group col-md-2">
+                <button type="button" class="btn btn-primary" onclick="bookRoom()">新增</button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 預訂列表 -->
+    <table class="table">
+        <thead>
+        <tr>
+            <th>預約ID</th>
+            <th>會議室</th>
+            <th>預訂人</th>
+            <th>日期</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="bookingTableBody">
+            <!-- 预订信息将在这里插入 -->
+        </tbody>
+    </table>
+</div>
+
+
+
+<script>
+    // 示例数据，实际应用中可通过Ajax获取
+    var bookingsData = [
+        { "bookingId": 1, "roomId": "101", "name": "Tom", "date": "2023-12-04" },
+        { "bookingId": 2, "roomId": "102", "name": "Mary", "date": "2023-12-05" }
+    ];
+
+    // 初始化预订列表
+    function initBookingTable() {
+        var tableBody = document.getElementById('bookingTableBody');
+        tableBody.innerHTML = '';
+
+        bookingsData.forEach(function (booking) {
+            var row = tableBody.insertRow();
+            row.innerHTML = '<td>' + booking.bookingId + '</td>' +
+                '<td>' + booking.roomId + '</td>' +
+                '<td>' + booking.name + '</td>' +
+                '<td>' + booking.date + '</td>' +
+                '<td><button class="btn btn-danger" onclick="cancelBooking(' + booking.bookingId + ')">刪除</button></td>';
+        });
+    }
+
+    // 新增预订
+    function bookRoom() {
+        var roomId = document.getElementById('roomId').value;
+        var name = document.getElementById('name').value;
+        var date = document.getElementById('date').value;
+
+        // 示例中直接在前端添加，实际应用中需通过Ajax发送请求到后端
+        var newBooking = {
+            "bookingId": bookingsData.length + 1,
+            "roomId": roomId,
+            "name": name,
+            "date": date
+        };
+        bookingsData.push(newBooking);
+
+        initBookingTable();
+    }
+
+    // 刪除预订
+    function cancelBooking(bookingId) {
+        // 示例中直接在前端删除，实际应用中需通过Ajax发送请求到后端
+        bookingsData = bookingsData.filter(function (booking) {
+            return booking.bookingId !== bookingId;
+        });
+
+        initBookingTable();
+    }
+
+    // 初始化
+    initBookingTable();
+</script>
+
+</body>
+</html>
