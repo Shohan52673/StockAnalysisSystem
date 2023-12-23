@@ -11,8 +11,6 @@
 	padding-left: 10%;
 	padding-right: 10%;
 }
-
-
 </style>
 </head>
 <body>
@@ -29,7 +27,8 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item"><a class="nav-link active"
-						aria-current="page" href="./WEB-INF/views/group_buy/frontend/main.jsp">首頁</a></li>
+						aria-current="page"
+						href="./WEB-INF/views/group_buy/frontend/main.jsp">首頁</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">自選股</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">台股</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">國際</a></li>
@@ -50,11 +49,9 @@
 						aria-label="Search">
 					<button class="btn btn-outline-success text-nowrap" type="submit">搜尋</button>
 				</form>
-			</div>
-			 <%@ include file="/WEB-INF/views/group_buy/include/login.jspf"%>
-		</div>
+				<div>
+					
+				</div>
 	</nav>
-
-	</script>
 </body>
 </html>
