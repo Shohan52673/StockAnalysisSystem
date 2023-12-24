@@ -19,14 +19,14 @@ public class UserMySQL implements UserDao{
 
 	@Override
 	public List<User> findAllUsers() {
-		String sql = "select userId, userName, password from user";
+		String sql = "select userId, nickname, userName, password, email from stockanalysissystem.user";
 		return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class));
 	}
 
 	@Override
 	public void addUser(User user) {
-		String sql ="insert into user(username, password, email) values(?,?,?)";
-		jdbcTemplate.update(sql, user.getUsername(), user.getPassword(), user.getEmail());
+		String sql ="insert into user(fullname, username, password, email) values(?,?,?,?)";
+		jdbcTemplate.update(sql,user.getFullname(), user.getUsername(), user.getPassword(), user.getEmail());
 		
 	}
 

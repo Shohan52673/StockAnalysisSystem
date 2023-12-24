@@ -3,15 +3,16 @@ drop table if exists user;
 -- 建立 User
 create table if not exists user(
 	userId int auto_increment primary key,
+	fullname varchar(50) not null,
     username varchar(50) unique not null,
     password varchar(50) not null,
     email varchar(50) not null
 );
 
-INSERT INTO user (userId, username, password, email ) VALUES
-(101, 'user123', 'pass123', '123@gmail.com'),
-(102, 'user456', 'pass456', '456@yahoo.com.tw'),
-(103, 'user789', 'pass789', '789@gmail.com');
+INSERT INTO user (userId, fullname, username, password, email ) VALUES
+(101,'王小強', 'user123', 'pass123', '123@gmail.com'),
+(102,'張大娘', 'user456', 'pass456', '456@yahoo.com.tw'),
+(103,'睪負蟀', 'user789', 'pass789', '789@gmail.com');
 
 
 Drop table if Exists SemiProductStock;

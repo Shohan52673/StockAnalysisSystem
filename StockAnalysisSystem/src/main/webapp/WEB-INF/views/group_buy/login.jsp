@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="sp" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,8 +13,14 @@
 }
 
 
-#username, #password, #code, h3, #fullname, #comfirm_password,#username2, #password2{
+#username, #password, h3, #fullname, #email, #comfirm_password,#username2, #password2{
   width: 250px;
+  height: 28px;
+  margin: 10px;
+}
+
+#code{
+  width: 70px;
   height: 28px;
   margin: 10px;
 }
@@ -27,11 +34,28 @@ h5:hover{
   color: black;
 }
 
-#container1, #container2{
+#container2{
   /*margin: 50px;*/
   padding: 10px;
   width: 330px;
-  height: 400px;
+  height: 450px;
+  background-color: white;
+  border-radius: 5px;
+  border-top: 10px solid #df5334;
+  box-shadow: 0 0px 70px rgba(0, 0, 0, 0.1);
+  
+  /*定位對齊*/
+  position:relative;   
+  margin: auto;
+  top: 100px;
+  /*text-align:center; */ 
+ }
+  
+#container1{
+  /*margin: 50px;*/
+  padding: 10px;
+  width: 330px;
+  height: 350px;
   background-color: white;
   border-radius: 5px;
   border-top: 10px solid #df5334;
@@ -55,8 +79,8 @@ h5:hover{
 .submit{
   color: white;  
   background: #df5334;
-  width: 250px;
-  height: 30px;
+  width: 265px;
+  height: 35px;
   margin: 10px;
   padding: 5px;
   border-radius: 5px;
@@ -69,7 +93,6 @@ h5:hover{
 
 #container2{
   visibility: hidden;   /*剛開始消失*/
-  height: 350px;
 }
 
 
@@ -90,6 +113,15 @@ input{
     display: flex;
     justify-content: space-between;
 }
+.captcha-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 10px;
+}
+.captcha-row > *{
+	margin-right: 20px;
+}
 
     </style>
 </head>
@@ -109,25 +141,30 @@ input{
             <input type="text" id="username" name="username" placeholder="帳號" value="user123" required>
             <div style="color: red">${wrongUsername}</div>
             <div class="tab"></div>
-            <input type="text" id="password" name="password" placeholder="密碼" value="pass123" required>
+            <input type="password" id="password" name="password" placeholder="密碼" value="pass123" required>
             <div style="color: red">${wrongPassword}</div>
             <div class="tab"></div>
-            <input type="text" id="code" name="code" placeholder="驗證碼" required>
+            
+            
+            <div class="captcha-row">
+    			<input type="text" id="code" name="code" placeholder="驗證碼">
+  		    	<img id="captcha-image" src="./getcode" alt="驗證碼" valign="middle" class="">
+  		        <button type="button" class="pure-button pure-button-secondary" id="refresh-btn" onclick="refreshCaptcha()">
+       	   	 	<i class="bi bi-arrow-repeat"></i>
+    			</button>
+			</div>
              <div style="color: red">${wrongCAPTCHA}</div>
+            
+            
             <div class="tab"></div>
-            <img id="captcha-image" src="./getcode" alt="驗證碼" valign="middle" class="">
-            <button type="button" class="pure-button pure-button-secondary " id="refresh-btn" onclick="refreshCaptcha()">
-            <i class="bi bi-arrow-repeat"></i>
-            </button>
-            <div class="tab"></div>
-            <input type="submit" value="登入" class="submit" onclick="location.href='https://codepen.io/rosewang0303/full/OQbLBv/'">
-          </form>  
+            <input type="submit" value="登入" class="submit" ">
           
 		  <div class="align-horizontal">
           <h5 onclick="show_hide()">註冊帳號</h5>
-          <h5>忘記密碼</h5>
+          <h5 onclick="show_hide2()">忘記密碼</h5>
           </div>
           
+          </form>  
         </div><!-- login end-->
       </div><!-- container1 end-->
     </div><!-- login_page end-->
@@ -137,40 +174,66 @@ input{
 
         <div class="signup">  
           
-          <h3>註冊 Sign Up</h3>
+          <h3>會員註冊</h3>
 
-          <form action="">
-            <input type="text" id="fullname" name="fullname" placeholder="使用者全名" required>
+          <sp:form  method="post" action="./signup" modelAttribute="user">
+            <input type="text" id="fullname" name="fullname" placeholder="使用者名稱" required/>
             <div class="tab"></div>
-            <input type="text" id="email" name="email" placeholder="電子信箱" required>
+            <input type="text" id="email" name="email" placeholder="電子信箱" required/>
             <div class="tab"></div>
-            <input type="text" id="username2" name="username" placeholder="帳號" required>
+            <input type="text" id="username2" name="username" placeholder="帳號" required/>
             <div class="tab"></div>
-            <input type="text" id="password2" name="password" placeholder="密碼" required>
+            <input type="password" id="password2" name="password" placeholder="密碼" required/>
             <div class="tab"></div>
-            <input type="text" id="comfirm_password" name="comfirm_password" placeholder="確認密碼" required>
+            <input type="password" id="comfirm_password" name="comfirm_password" placeholder="確認密碼" required/>
             <div class="tab"></div>            
-            <input type="submit" value="註冊" class="submit">
-          </form>  
+            <button type="submit" class="submit">註冊</button>
+          </sp:form>  
           
 		  <div class="align-horizontal">
           <h5 onclick="show_hide()">登入帳號</h5>
-          <h5>忘記密碼</h5>
+          <h5 onclick="show_hide2()">忘記密碼</h5>
           </div>
           
         </div><!-- signup end-->
       </div><!-- container2 end-->
     </div><!-- signup_page end--> 
+    
+    <div class="resetPasswoed_page">
+      <div id="container3">
+
+        <div class="resetPasswoed">  
+          
+          <h3>忘記密碼</h3>
+
+          <form action="">
+            <input type="text" id="username" name="username" placeholder="帳號" required>
+            <div class="tab"></div>
+            <input type="text" id="email" name="email" placeholder="電子信箱" required>
+            <div class="tab"></div>            
+            <input type="submit" value="送出" class="submit">
+          </form>  
+          
+		  <div class="align-horizontal">
+          <h5 onclick="show_hide2()">登入帳號</h5>
+          <h5 onclick="show_hide2()">註冊帳號</h5>
+          </div>
+          
+        </div><!-- resetPasswoed end-->
+      </div><!-- container3 end-->
+    </div><!-- resetPasswoed_page end--> 
+    
+    	
 <!-- 
     <div id="copyright">
       <h4></h4>因為js，會跑版 
     </div>  -->   
   </body>
-  <script>
+  <script type="text/javascript">
   function show_hide() {
     var login = document.getElementById("container1");
     var signup = document.getElementById("container2");
-   /*  var copyright = document.getElementById("copyright"); */
+   /*   var copyright = document.getElementById("copyright"); */
   
     if (login.style.display === "none") {
         login.style.display = "block";  //lonin出現

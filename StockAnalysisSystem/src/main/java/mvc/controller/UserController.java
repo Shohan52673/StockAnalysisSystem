@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -100,11 +101,11 @@ public class UserController {
 						@RequestParam("code") String code,
 						HttpSession session, Model model) {
 		// 比對驗證碼
-		if(!code.equals(session.getAttribute("code")+"")) {
-			session.invalidate(); // session 過期失效
-			model.addAttribute("wrongCAPTCHA", "驗證碼錯誤");
-			return "group_buy/login";
-		}
+//		if(!code.equals(session.getAttribute("code")+"")) {
+//			session.invalidate(); // session 過期失效
+//			model.addAttribute("wrongCAPTCHA", "驗證碼錯誤");
+//			return "group_buy/login";
+//		}
 		//根據 username 查找 user 物件
 		Optional<User> userOptional = userdao.findUserByUsername(username);
 		if(userOptional.isPresent()) {
@@ -131,14 +132,16 @@ public class UserController {
 		return "redirect:/mvc/group_buy/login";
 	}
 	
-	@GetMapping("/register")
-	public String unRegister(HttpSession session) {
+	@PostMapping("/signup")
+	public String signup(HttpSession session,
+						@ModelAttribute("user")	User user) {
+		
 		session.invalidate();
-		return"group_buy/include/register";
+		userdao.addUser(user);
+		return"group_buy/include/login";
 	}
 	
-//	@PostMapping("/register")
-//	public String register()
+
 		
 		
 		
