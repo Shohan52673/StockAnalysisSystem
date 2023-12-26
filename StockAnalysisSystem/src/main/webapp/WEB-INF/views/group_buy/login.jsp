@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <title>會員登入</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <style>
+<style>
         *{
   font-family:微軟正黑體;  
 }
@@ -137,17 +137,17 @@ input{
           
           <h3>會員登入</h3>
 
-          <form method="post" action="./login">
-            <input type="text" id="username" name="username" placeholder="帳號" value="user123" required>
+          <sp:form  modelAttribute="loginuser" method="post" action="${pageContext.request.contextPath}/mvc/group_buy/login">
+            <sp:input type="text" path="username" placeholder="帳號" value="123@gmail.com"/>
             <div style="color: red">${wrongUsername}</div>
             <div class="tab"></div>
-            <input type="password" id="password" name="password" placeholder="密碼" value="pass123" required>
+            <sp:input type="password" path="password" placeholder="密碼" value="pass123"/>
             <div style="color: red">${wrongPassword}</div>
             <div class="tab"></div>
             
             
             <div class="captcha-row">
-    			<input type="text" id="code" name="code" placeholder="驗證碼">
+    			<sp:input type="text" path="code" placeholder="驗證碼"/>
   		    	<img id="captcha-image" src="./getcode" alt="驗證碼" valign="middle" class="">
   		        <button type="button" class="pure-button pure-button-secondary" id="refresh-btn" onclick="refreshCaptcha()">
        	   	 	<i class="bi bi-arrow-repeat"></i>
@@ -157,49 +157,24 @@ input{
             
             
             <div class="tab"></div>
-            <input type="submit" value="登入" class="submit" ">
+            <button type="submit" class="submit" ">登入</button>
+          </sp:form>  
+          
           
 		  <div class="align-horizontal">
           <h5 onclick="show_hide()">註冊帳號</h5>
           <h5 onclick="show_hide2()">忘記密碼</h5>
           </div>
           
-          </form>  
         </div><!-- login end-->
       </div><!-- container1 end-->
     </div><!-- login_page end-->
     
-    <div class="signup_page">
-      <div id="container2">
-
-        <div class="signup">  
-          
-          <h3>會員註冊</h3>
-
-          <sp:form  method="post" action="./signup" modelAttribute="user">
-            <input type="text" id="fullname" name="fullname" placeholder="使用者名稱" required/>
-            <div class="tab"></div>
-            <input type="text" id="email" name="email" placeholder="電子信箱" required/>
-            <div class="tab"></div>
-            <input type="text" id="username2" name="username" placeholder="帳號" required/>
-            <div class="tab"></div>
-            <input type="password" id="password2" name="password" placeholder="密碼" required/>
-            <div class="tab"></div>
-            <input type="password" id="comfirm_password" name="comfirm_password" placeholder="確認密碼" required/>
-            <div class="tab"></div>            
-            <button type="submit" class="submit">註冊</button>
-          </sp:form>  
-          
-		  <div class="align-horizontal">
-          <h5 onclick="show_hide()">登入帳號</h5>
-          <h5 onclick="show_hide2()">忘記密碼</h5>
-          </div>
-          
-        </div><!-- signup end-->
-      </div><!-- container2 end-->
-    </div><!-- signup_page end--> 
+    <!-- signup_page -->
     
-    <div class="resetPasswoed_page">
+<%@ include file="/WEB-INF/views/group_buy/include/signup.jspf" %>
+
+   <!--  <div class="resetPasswoed_page">
       <div id="container3">
 
         <div class="resetPasswoed">  
@@ -219,9 +194,9 @@ input{
           <h5 onclick="show_hide2()">註冊帳號</h5>
           </div>
           
-        </div><!-- resetPasswoed end-->
-      </div><!-- container3 end-->
-    </div><!-- resetPasswoed_page end--> 
+        </div>resetPasswoed end
+      </div>container3 end
+    </div>resetPasswoed_page end  -->
     
     	
 <!-- 
@@ -237,9 +212,9 @@ input{
   
     if (login.style.display === "none") {
         login.style.display = "block";  //lonin出現
-        document.getElementById("username").value="";
+        /* document.getElementById("username").value="";
         document.getElementById("password").value="";
-        document.getElementById("code").value="";
+        document.getElementById("code").value=""; */
         signup.style.display = "none";  //signup消失
         /* copyright.style.margin = "200px 0px 0px 0px"; */
     } else {
@@ -248,11 +223,11 @@ input{
         signup.style.visibility="visible";
         /* copyright.style.margin = "200px 0px 0px 0px"; */
      
-        document.getElementById("fullname").value="";
+        /* document.getElementById("fullname").value="";
         document.getElementById("email").value="";
         document.getElementById("username2").value="";
         document.getElementById("password2").value="";
-        document.getElementById("comfirm_password").value="";
+        document.getElementById("comfirm_password").value=""; */
     }
 }
   

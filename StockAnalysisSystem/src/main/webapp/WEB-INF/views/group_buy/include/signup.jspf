@@ -1,0 +1,28 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="sp" uri="http://www.springframework.org/tags/form" %>
+<div class="signup_page">
+      <div id="container2">
+
+        <div class="signup">  
+          
+          <h3>會員註冊</h3>
+
+          <sp:form  method="post" action="${pageContext.request.contextPath}/mvc/group_buy/signup" modelAttribute="signupuser">
+            <sp:input type="text" path="username" placeholder="電子信箱" />
+            <div class="tab"></div>
+            <sp:input type="password" path="password" placeholder="密碼" />
+            <div class="tab"></div>
+            <input type="password" id="comfirm_password" name="comfirm_password" placeholder="確認密碼" />
+            <div class="tab"></div>       
+            <button type="submit" class="submit">註冊</button>
+          </sp:form>  
+          
+		  <div class="align-horizontal">
+          <h5 onclick="show_hide()">登入帳號</h5>
+          <h5 onclick="show_hide2()">忘記密碼</h5>
+          </div>
+          
+        </div><!-- signup end-->
+      </div><!-- container2 end-->
+    </div><!-- signup_page end--> 
