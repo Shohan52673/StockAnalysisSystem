@@ -9,7 +9,11 @@
           <h3>會員註冊</h3>
 
           <sp:form  method="post" action="${pageContext.request.contextPath}/mvc/group_buy/signup" modelAttribute="signupuser">
-            <sp:input type="text" path="username" placeholder="電子信箱" />
+            <sp:input type="text" path="fullname" placeholder="姓名" />
+            <div class="tab"></div>
+            <sp:input type="text" path="email" placeholder="電子信箱" />
+            <div class="tab"></div>
+            <sp:input type="text" path="username" placeholder="帳號" />
             <div class="tab"></div>
             <sp:input type="password" path="password" placeholder="密碼" />
             <div class="tab"></div>

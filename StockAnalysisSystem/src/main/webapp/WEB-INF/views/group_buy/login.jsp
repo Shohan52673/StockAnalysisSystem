@@ -138,10 +138,10 @@ input{
           <h3>會員登入</h3>
 
           <sp:form  modelAttribute="loginuser" method="post" action="${pageContext.request.contextPath}/mvc/group_buy/login">
-            <sp:input type="text" path="username" placeholder="帳號" value="123@gmail.com"/>
+            <sp:input type="text" path="username" placeholder="帳號" />
             <div style="color: red">${wrongUsername}</div>
             <div class="tab"></div>
-            <sp:input type="password" path="password" placeholder="密碼" value="pass123"/>
+            <sp:input type="password" path="password" placeholder="密碼" />
             <div style="color: red">${wrongPassword}</div>
             <div class="tab"></div>
             

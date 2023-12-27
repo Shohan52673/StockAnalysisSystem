@@ -103,23 +103,22 @@ public class UserController {
 	
 	//登入
 	@PostMapping("/login")
-	public String login(@ModelAttribute("signupuser") SignupUser signupUser,
-						@ModelAttribute("loginuser") @Valid LoginUser loginUser, BindingResult result,
+	public String login(@ModelAttribute("loginuser") @Valid LoginUser loginUser, BindingResult result,@ModelAttribute("signupuser") SignupUser signupUser,
 						HttpSession session, Model model) {
 		//表單驗證＠Valid
 		if(result.hasErrors()) {
 			System.out.println("表單驗證＠Valid失敗！");
 			return "group_buy/login";
 		}
-		// 比對驗證碼
-//		if(!code.equals(session.getAttribute("code")+"")) {
-//			session.invalidate(); // session 過期失效
-//			model.addAttribute("wrongCAPTCHA", "驗證碼錯誤");
-//			System.out.println("驗證碼錯誤！");
-//			return "group_buy/login";
-//		}
+		 //比對驗證碼
+		if(!loginUser.getCode().equals(session.getAttribute("code")+"")) {
+			session.invalidate(); // session 過期失效
+			model.addAttribute("wrongCAPTCHA", "驗證碼錯誤");
+			System.out.println("驗證碼錯誤！");
+			return "group_buy/login";
+		}
 		//根據 username 查找 user 物件
-		Optional<User> userOptional = userdao.findUserByUsername(signupUser.getPassword());
+		Optional<User> userOptional = userdao.findUserByUsername(signupUser.getUsername());
 		if(userOptional.isPresent()) {
 			User dbuser = userOptional.get();
 			// 比對 password
