@@ -33,7 +33,7 @@
 </head>
 <body>
     <div class="container">
-        <table class="table table-striped" id="stock">
+        <table class="table table-striped">
             <thead>
                 <!-- 表格標題 -->
                <tr>
@@ -55,11 +55,13 @@
                     <th scope="col" class="itemNa">時間</th>
                 </tr>
             </thead>
-            <tbody id="spinner">
-	            <div>
+            <tbody id="stock">
+	            <div id="spinner">
 	                <span class="visually-hidden">Loading...</span>
 	            </div>
-            </tbody>
+	            <div id="analysis">
+            	
+   				</div>
             <!-- 表格內容 -->
             
         </tbody>
@@ -67,61 +69,51 @@
     </div>
     
     <script>
-        // 等待文档加载完成后执行
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('http://localhost:8080/WebSocketDemo/mvc/stock')
-                //.then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    //updateStockList(data);
-                }).catch(error => console.error(error));
+		
+		$(function() {
+			$.ajax({
+		        url: 'http://localhost:8080/WebSocketDemo/mvc/stock',
+		        success: function ( data ){
+					console.log(data);
+		        }
+		    });
+		});
+		
+		var socket = new WebSocket('ws://localhost:8080/WebSocketDemo/mvc/websocket');
 
-            var socket = new WebSocket('ws://localhost:8080/WebSocketDemo/mvc/websocket');
+		socket.onopen = function() {
+		    console.log('WebSocket連線已建立');
+		};
+		
+		socket.onmessage = function(event) {
+		    let message = JSON.parse(event.data);
+			if(message.type == 'stocks' ) {
+				let stocks = message.content;
+				console.log(stocks);
+				$('#stock #analysis tr').remove();
+				$('#spinner').addClass('d-none');
+				$.each(stocks, function(index,stock){
+					$('#stock #analysis').append(
+						`		  
+						   <tr>
+						    <th scope="row">${stock.stockName}</th>
+						      <td>${stock.stockNumber}</td>
+						      <td>${stock.price}</td>
+						      <td>${stock.priceChange}</td>
+						    <span class="badge bg-primary rounded-pill"> 
+								${stock.trading}
+							</span>
+						  </tr>
+				  		`
+					);
+				});
+			}
+		};
+		
+		socket.onclose = function() {
+		    console.log('WebSocket連線已關閉');
+		};
 
-            socket.onopen = function() {
-                console.log('WebSocket 连接已建立');
-            };
-
-            socket.onmessage = function(event) {
-                let message = JSON.parse(event.data);
-                if (message.type == 'stocks') {
-                    console.log(message.content);
-                    updateStockList(message.content);
-                }
-            };
-
-            socket.onclose = function() {
-                console.log('WebSocket 连接已关闭');
-            };
-
-            function updateStockList(stocks) {
-                let stockList = document.querySelector('#stock');
-                
-                //console.log(stockList);
-                
-                let content = '';
-                //stockList.innerHTML = '';
-
-                stocks.forEach(stock => {
-                	//console.log(stock.stockName);
-                	content += 
-                	`
-                        <tr>
-                    		<th scope="row">1</th>
-                    		<td>2</td>
-                    		<td>3</td>
-                    		<td>4</td>
-                    		<span class="badge bg-primary rounded-pill">5</span>
-                    	</tr>    
-                    `;
-                });
-                //console.log(content);
-                stockList.append(content);
-                console.log(stockList);
-
-                document.getElementById('spinner').classList.add('d-none');
-            }
-        });
-    </script>
+	</script>
 </body>
 </html>
