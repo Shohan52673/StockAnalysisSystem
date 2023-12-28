@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -54,6 +55,17 @@ public class SemiProductStockDaoMySQL implements SemiProductStockDao {
 	@Override
 	public int getNextSeq() {
 		return jdbcTemplate.queryForObject(NEXT_SEQ_SQL, Integer.class);
+	}
+
+	@Override
+	public List<SemiProductStock> findLatestSemiProductStock() {
+		String sql = "select v.trx_id, v.stockName, v.stockNumber, v.price, v.priceChange, v.trading, v.createDate from ( "
+				+ "	SELECT trx_id, stockName, stockNumber, price, priceChange, trading, createDate, "
+				+ "	RANK() OVER ( ORDER BY trx_id desc) as rk  "
+				+ "	FROM StockAnalysisSystem.SemiProductStock "
+				+ ") v where v.rk = 1 order by v.price desc";
+
+		return jdbcTemplate.query(sql, new BeanPropertyRowMapper(SemiProductStock.class));
 	}
 
 }

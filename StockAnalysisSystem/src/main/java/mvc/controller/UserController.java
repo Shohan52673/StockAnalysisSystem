@@ -136,7 +136,7 @@ public class UserController {
 				session.setAttribute("user", dbuser);// 將 user 物件放入到 session 變數中
 				System.out.println("登入成功");
 //				return "redirect:/mvc/group_buy/main";// OK, 導向前台首頁
-				return "group_buy/main";
+				return "redirect:/mvc/group_buy/fronted/main";
 			}else {
 				session.invalidate();// session 過期失效
 				model.addAttribute("wrongPassword", "密碼錯誤！");
@@ -152,7 +152,7 @@ public class UserController {
 	}
 	
 	//登出
-	@GetMapping("/logout")
+	@PostMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
 		return "redirect:/mvc/group_buy/login";

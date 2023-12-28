@@ -1,5 +1,7 @@
 package com.example.bean;
 
+import com.google.gson.Gson;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,5 +22,10 @@ public class SemiProductStock {
 	private String priceChange;
 	
 	private String trading;
+	
+	@Override
+	public String toString() {
+		return new Gson().toJson(this);
+	}
 	
 }

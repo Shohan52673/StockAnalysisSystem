@@ -11,4 +11,6 @@ public interface SemiProductStockDao {
 	int getNextSeq();
 	
 	int[] save(List<SemiProductStock> semiProductStocks);
+	
+	List<SemiProductStock> findLatestSemiProductStock();
 }

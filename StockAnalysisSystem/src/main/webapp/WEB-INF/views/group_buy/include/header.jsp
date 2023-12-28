@@ -50,7 +50,7 @@
 					<button class="btn btn-outline-success text-nowrap" type="submit">搜尋</button>
 				</form>
 				<div>
-					<a>${user.username}</a>
+				<%@ include file="./logout.jspf" %>
 				</div>
 	</nav>
 </body>
