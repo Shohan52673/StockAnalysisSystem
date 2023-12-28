@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,8 +22,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.databind.Module;
+
+import aweit.mail.GMail;
 import mvc.bean.LoginUser;
+import mvc.bean.ResetPassword;
 import mvc.bean.SignupUser;
 import mvc.dao.UserDao;
 import mvc.entity.User;
@@ -38,8 +44,8 @@ public class UserController {
 	@GetMapping("/refreshCode")
 	private void refreshCode(HttpSession session, HttpServletResponse response) throws IOException {
 	    // Call the existing code to generate a new code and image
+		System.out.println("refresh圖形");
 	    getCodeImage(session, response);
-	    System.out.println("refresh圖形");
 	}
 	
 	
@@ -89,13 +95,14 @@ public class UserController {
 		// 將影像串流回寫給 client
 		ImageIO.write(img, "PNG", response.getOutputStream());
 		
-		System.out.println("圖形生成");
+		System.out.println("驗證碼生成");
 	}
 	
 	// 呈現 login 頁面
 	@GetMapping("/login")
-	public String index(@ModelAttribute("signupuser") SignupUser signupUser,
-						@ModelAttribute("loginuser") LoginUser loginUser) {
+	public String index(@ModelAttribute("loginuser") LoginUser loginUser,
+						@ModelAttribute("signupuser") SignupUser signupUser,
+						@ModelAttribute("resetPassword") ResetPassword resetPassword) {
 		System.out.println("登入介面");
 		return "group_buy/login";
 		
@@ -103,10 +110,13 @@ public class UserController {
 	
 	//登入
 	@PostMapping("/login")
-	public String login(@ModelAttribute("loginuser") @Valid LoginUser loginUser, BindingResult result,@ModelAttribute("signupuser") SignupUser signupUser,
+	public String login(@ModelAttribute("loginuser") @Valid LoginUser loginUser, BindingResult result,
+						@ModelAttribute("signupuser") SignupUser signupUser,
+						@ModelAttribute("resetPassword") ResetPassword resetPassword,
 						HttpSession session, Model model) {
 		//表單驗證＠Valid
 		if(result.hasErrors()) {
+			session.invalidate(); // session 過期失效
 			System.out.println("表單驗證＠Valid失敗！");
 			return "group_buy/login";
 		}
@@ -118,7 +128,7 @@ public class UserController {
 			return "group_buy/login";
 		}
 		//根據 username 查找 user 物件
-		Optional<User> userOptional = userdao.findUserByUsername(signupUser.getUsername());
+		Optional<User> userOptional = userdao.findUserByUsername(loginUser.getUsername());
 		if(userOptional.isPresent()) {
 			User dbuser = userOptional.get();
 			// 比對 password
@@ -149,31 +159,143 @@ public class UserController {
 	}
 	
 	//註冊
-//	@PostMapping("/signup")
-//	public String signup( 
-//						 @Valid SignupUser user, BindingResult result,
-//						 @RequestParam("comfirm_password") String comfirm_password,
-//						 HttpSession session,
-//						 Model model) {
-//		
-//		if(result.hasErrors()) {
-//			return "group_buy/login";
-//		}
-//		Optional<SignupUser> userOpt = userdao.findUserByUsername(username);
-//		
-//		userdao.addUser(user);
-//		System.out.println("User added: ");
-//		return "redirect:/mvc/group_buy/login";
-//	}
+	@GetMapping("/signup")
+	public String signup(@ModelAttribute("signupuser") SignupUser signupUser,
+						 @ModelAttribute("loginuser") LoginUser loginUser,
+						 @ModelAttribute("resetPassword") ResetPassword resetPassword,
+						 HttpSession session){
+		session.invalidate();
+		System.out.println("註冊介面");
+		return "group_buy/include/signup";
+	}
 	
-
+	//註冊
+	@PostMapping("/signup")
+	public String signup(@ModelAttribute("signupuser") @Valid SignupUser signupuser, BindingResult result,
+						 @ModelAttribute("loginuser") LoginUser loginUser,
+						 @ModelAttribute("resetPassword") ResetPassword resetPassword,
+						 @RequestParam("comfirm_password") String comfirm_password,
+						 HttpSession session, User user,Model model) {
+		// Signup 表單數據驗證
+		if(result.hasErrors()) {
+			session.invalidate(); // session 過期失效
+			return "group_buy/include/signup";
+		}
+		Optional<User> userOptEmail = userdao.findUserByEmail(signupuser.getEmail());
+		if(userOptEmail.isPresent()) {
+			// 出現錯誤訊息
+			model.addAttribute("signupemail", "信箱已存在");
+			session.invalidate(); // session 過期失效
+			System.out.println("錯誤，信箱已存在！");
+			return "group_buy/include/signup";
+		}
+		  	Optional<User> userOptName = userdao.findUserByUsername(signupuser.getUsername());
+		  	if(userOptName.isPresent()) {
+			  model.addAttribute("signupname", "帳號已存在");
+			  session.invalidate(); // session 過期失效
+			  System.out.println("錯誤，帳號已存在！");
+			  return "group_buy/include/signup";
+		  	}
+		  		if(signupuser.getPassword().equals(comfirm_password)) {
+		  				user.setFullname(signupuser.getFullname());
+		  				user.setEmail(signupuser.getEmail());	
+		  				user.setUsername(signupuser.getUsername());
+		  				user.setPassword(signupuser.getPassword());
+		  			
+		  				int rowcount = userdao.addUser(user);
+		  				if(rowcount > 0) {
+		  					session.invalidate(); // session 過期失效
+		  					System.out.println("註冊成功！");
+		  					return "redirect:/mvc/group_buy/success";
+		  				}
+		  				
+		  		}
+		  		session.invalidate(); // session 過期失效
+		  		model.addAttribute("comfirm_password", "密碼不一致！");
+		  		System.out.println("密碼不一致！");
+		  		return "group_buy/include/signup";	
 		
-		
-		
-		
-		
-
-		
+	}
 	
+	@GetMapping("/success")
+	public String success(HttpSession session) {
+		session.invalidate(); // session 過期失效
+		System.out.println("註冊成功介面");
+		return "group_buy/include/success";
+	}
+	
+	@GetMapping("/resetPassword")
+	public String resetPassword(@ModelAttribute("resetPassword") ResetPassword resetPassword,
+								@ModelAttribute("loginuser") LoginUser loginUser,
+								@ModelAttribute("signupuser") SignupUser signupUser,
+								HttpSession session) {
+		session.invalidate(); // session 過期失效
+		System.out.println("忘記密碼介面");
+		return "group_buy/include/resetPassword";
+		
+	}
+	
+	@PostMapping("/resetPassword")
+	public String resetPassword(@ModelAttribute("resetPassword") @Valid ResetPassword resetPassword, BindingResult result,
+								@ModelAttribute("loginuser") LoginUser loginUser,
+								@ModelAttribute("signupuser") SignupUser signupUser,
+								HttpSession session, Model model) {
+		
+	// resetPassword 表單數據驗證
+		if(result.hasErrors()) {
+			session.invalidate(); // session 過期失效
+			return "group_buy/include/resetPassword";
+		}
+			Optional<User> userOptional = userdao.findUserByEmail(resetPassword.getEmail());
+			if(userOptional.isPresent()) {
+				User dbuser = userOptional.get();
+				//比對username
+				if(dbuser.getUsername().equals(resetPassword.getUsername())) {
+					
+					try {
+	                    // 使用 Gmail 來發送郵件
+	                    GMail mail = new GMail("a832k7025079@gmail.com", "gwxr jjuf snsi duev");
+
+	                    mail.from("a832k7025079@gmail.com")
+	        		    .to(resetPassword.getEmail())
+//	                    .to("a832k7025079@gmail.com")
+	        		    .cc("a832k7025079@gmail.com")
+	        		    .personal("柯林")
+	        		    .subject("測試信件")
+	        		    .context("密碼："+ generateRandomString(8))
+//	        		    .attachement(Path.of(GmailDemo.class.getClassLoader().getResource("123.txt").toURI()))
+	        		    .send();
+	                   
+	                    session.invalidate();
+	                    System.out.println("信箱已發送");
+	                    return"group_buy/login";
+	                    
+	                } catch (MailException e) {
+	                    // 處理郵件發送失敗的情況
+	                    e.printStackTrace();
+	                }
+				}
+				
+			}
+				session.invalidate();
+				model.addAttribute("email", "信箱有誤");
+				System.out.println("信箱錯誤！");
+				return"group_buy/resetPassword";
+	}
+
+
+	// 生成指定長度的亂數字串
+	private String generateRandomString(int length) {
+	    String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	    Random random = new Random();
+	    StringBuilder sb = new StringBuilder(length);
+	    
+	    for (int i = 0; i < length; i++) {
+	        int index = random.nextInt(characters.length());
+	        sb.append(characters.charAt(index));
+	    }
+
+	    return sb.toString();
+	}
 
 }

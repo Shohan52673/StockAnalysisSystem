@@ -20,7 +20,7 @@ public class GmailDemo {
 		    .personal("柯林")
 		    .subject("測試信件")
 		    .context("加油！！👨")
-		    .attachement(Path.of(GmailDemo.class.getClassLoader().getResource("123.txt").toURI()))
+//		    .attachement(Path.of(GmailDemo.class.getClassLoader().getResource("123.txt").toURI()))
 		    .send();
 
 	}

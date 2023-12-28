@@ -13,7 +13,7 @@
 }
 
 
-#username, #password, h3, #fullname, #email, #comfirm_password,#username2, #password2{
+#username, #password, h3, #fullname, #email, #comfirm_password {
   width: 250px;
   height: 28px;
   margin: 10px;
@@ -25,37 +25,21 @@
   margin: 10px;
 }
 
-h5{
+a{
   margin: 20px;
   color: #a3a2a3;
 }
 
-h5:hover{
+a:hover{
   color: black;
 }
 
-#container2{
-  /*margin: 50px;*/
-  padding: 10px;
-  width: 330px;
-  height: 450px;
-  background-color: white;
-  border-radius: 5px;
-  border-top: 10px solid #df5334;
-  box-shadow: 0 0px 70px rgba(0, 0, 0, 0.1);
-  
-  /*定位對齊*/
-  position:relative;   
-  margin: auto;
-  top: 100px;
-  /*text-align:center; */ 
- }
   
 #container1{
   /*margin: 50px;*/
   padding: 10px;
   width: 330px;
-  height: 350px;
+  height: 400px;
   background-color: white;
   border-radius: 5px;
   border-top: 10px solid #df5334;
@@ -91,17 +75,6 @@ h5:hover{
   background: #db6937;
 }
 
-#container2{
-  visibility: hidden;   /*剛開始消失*/
-}
-
-
-/* #copyright{
-  text-align: center;
-  color: #a3a2a3;
-  margin: -200px 0px 0px 0px;
-  font-size: 14px;
-} */
 
 input{
   padding: 5px;
@@ -138,22 +111,21 @@ input{
           <h3>會員登入</h3>
 
           <sp:form  modelAttribute="loginuser" method="post" action="${pageContext.request.contextPath}/mvc/group_buy/login">
-            <sp:input type="text" path="username" placeholder="帳號" />
-            <div style="color: red">${wrongUsername}</div>
-            <div class="tab"></div>
-            <sp:input type="password" path="password" placeholder="密碼" />
-            <div style="color: red">${wrongPassword}</div>
-            <div class="tab"></div>
+            <sp:input type="text" path="username" placeholder="帳號" ></sp:input>
+            <div style="color: red">${wrongUsername}</div> <sp:errors path="username" style="color: red; font-size:8px"/>
+            <sp:input type="password" path="password" placeholder="密碼" ></sp:input>
+            <div style="color: red">${wrongPassword}</div> <sp:errors path="password" style="color: red; font-size:8px"/>
             
             
             <div class="captcha-row">
-    			<sp:input type="text" path="code" placeholder="驗證碼"/>
+    			<sp:input type="text" path="code" placeholder="驗證碼"></sp:input> 
   		    	<img id="captcha-image" src="./getcode" alt="驗證碼" valign="middle" class="">
   		        <button type="button" class="pure-button pure-button-secondary" id="refresh-btn" onclick="refreshCaptcha()">
        	   	 	<i class="bi bi-arrow-repeat"></i>
     			</button>
 			</div>
              <div style="color: red">${wrongCAPTCHA}</div>
+    		 <sp:errors path="code" style="color: red; font-size:8px"/>
             
             
             <div class="tab"></div>
@@ -162,74 +134,15 @@ input{
           
           
 		  <div class="align-horizontal">
-          <h5 onclick="show_hide()">註冊帳號</h5>
-          <h5 onclick="show_hide2()">忘記密碼</h5>
+          <h5><a href="${pageContext.request.contextPath}/mvc/group_buy/signup">註冊帳號</a></h5>
+          <h5><a href="${pageContext.request.contextPath}/mvc/group_buy/resetPassword">忘記密碼</a></h5>
           </div>
           
         </div><!-- login end-->
       </div><!-- container1 end-->
     </div><!-- login_page end-->
-    
-    <!-- signup_page -->
-    
-<%@ include file="/WEB-INF/views/group_buy/include/signup.jspf" %>
-
-   <!--  <div class="resetPasswoed_page">
-      <div id="container3">
-
-        <div class="resetPasswoed">  
-          
-          <h3>忘記密碼</h3>
-
-          <form action="">
-            <input type="text" id="username" name="username" placeholder="帳號" required>
-            <div class="tab"></div>
-            <input type="text" id="email" name="email" placeholder="電子信箱" required>
-            <div class="tab"></div>            
-            <input type="submit" value="送出" class="submit">
-          </form>  
-          
-		  <div class="align-horizontal">
-          <h5 onclick="show_hide2()">登入帳號</h5>
-          <h5 onclick="show_hide2()">註冊帳號</h5>
-          </div>
-          
-        </div>resetPasswoed end
-      </div>container3 end
-    </div>resetPasswoed_page end  -->
-    
-    	
-<!-- 
-    <div id="copyright">
-      <h4></h4>因為js，會跑版 
-    </div>  -->   
-  </body>
-  <script type="text/javascript">
-  function show_hide() {
-    var login = document.getElementById("container1");
-    var signup = document.getElementById("container2");
-   /*   var copyright = document.getElementById("copyright"); */
-  
-    if (login.style.display === "none") {
-        login.style.display = "block";  //lonin出現
-        /* document.getElementById("username").value="";
-        document.getElementById("password").value="";
-        document.getElementById("code").value=""; */
-        signup.style.display = "none";  //signup消失
-        /* copyright.style.margin = "200px 0px 0px 0px"; */
-    } else {
-        login.style.display = "none";   //login消失
-        signup.style.display = "block"; //signup出現
-        signup.style.visibility="visible";
-        /* copyright.style.margin = "200px 0px 0px 0px"; */
-     
-        /* document.getElementById("fullname").value="";
-        document.getElementById("email").value="";
-        document.getElementById("username2").value="";
-        document.getElementById("password2").value="";
-        document.getElementById("comfirm_password").value=""; */
-    }
-}
+ 
+  <script>
   
   function refreshCaptcha() {
       // 通過 AJAX 請求向後端獲取新的驗證碼圖片

@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%-- <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="sp" uri="http://www.springframework.org/tags/form" %>
 <div class="signup_page">
@@ -10,23 +10,29 @@
 
           <sp:form  method="post" action="${pageContext.request.contextPath}/mvc/group_buy/signup" modelAttribute="signupuser">
             <sp:input type="text" path="fullname" placeholder="姓名" />
-            <div class="tab"></div>
+            <sp:errors path="fullname" style="color: red; font-size:8px"/>
+            
             <sp:input type="text" path="email" placeholder="電子信箱" />
-            <div class="tab"></div>
+            <sp:errors path="email" style="color: red; font-size:8px"/>
+            <div style="color: red; font-size:8px">${signupemail}</div>
+            
             <sp:input type="text" path="username" placeholder="帳號" />
-            <div class="tab"></div>
+            <sp:errors path="username" style="color: red; font-size:8px"/>
+            <div style="color: red; font-size:8px">${signupname}</div>
+            
             <sp:input type="password" path="password" placeholder="密碼" />
-            <div class="tab"></div>
+            <sp:errors path="password" style="color: red; font-size:8px"/>
+            
             <input type="password" id="comfirm_password" name="comfirm_password" placeholder="確認密碼" />
-            <div class="tab"></div>       
+            <div style="color: red; font-size:8px">${comfirm_password}</div>       
+            
             <button type="submit" class="submit">註冊</button>
           </sp:form>  
           
 		  <div class="align-horizontal">
           <h5 onclick="show_hide()">登入帳號</h5>
-          <h5 onclick="show_hide2()">忘記密碼</h5>
           </div>
           
         </div><!-- signup end-->
       </div><!-- container2 end-->
-    </div><!-- signup_page end--> 
+    </div><!-- signup_page end-->  --%>

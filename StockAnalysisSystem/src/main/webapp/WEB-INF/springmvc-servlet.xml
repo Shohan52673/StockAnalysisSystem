@@ -19,7 +19,8 @@
 	<context:component-scan base-package="mvc" />
 	
 	<!-- 設定 Spring AOP 切面程式自動實現代理 -->
-	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->
+	
 	
 	<!-- 配置 view 渲染器位置 -->
 	<bean id="internalResourceViewResolver"
@@ -61,7 +62,7 @@
     <!-- 開啟註解驅動，對事務相關的註解進行掃描與解析 -->
     <tx:annotation-driven transaction-manager="transactionManager"></tx:annotation-driven>
 	
-	<!-- 錯誤訊息設定 properites -->
+	<!-- 錯誤訊息設定 properties -->
 	<bean id="messageSource"
 			class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 	    <property name="basename" value="/WEB-INF/resources/errorMessage" />
@@ -101,6 +102,8 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/group_buy/**"/>
+             <mvc:exclude-mapping path="/group_buy/resetPassword"/>
+             <mvc:exclude-mapping path="/group_buy/success"/>
             <mvc:exclude-mapping path="/group_buy/getcode"/>
             <mvc:exclude-mapping path="/group_buy/signup"/>
             <mvc:exclude-mapping path="/group_buy/login"/>
