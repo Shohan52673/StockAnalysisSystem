@@ -20,7 +20,8 @@ public class StockController {
 	
 	@GetMapping()
 	@ResponseBody
-	public void update() throws IOException {
+	public String update() throws IOException {
 		serverWebSocketHandler.sendPeriodicMessages();
+		return "OK";
 	}
 }

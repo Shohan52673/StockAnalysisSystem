@@ -32,8 +32,11 @@
     
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="stock">
         <table class="table table-striped">
+       			 <div id="spinner">
+	                <span class="visually-hidden">Loading...</span>
+	             </div>
             <thead>
                 <!-- 表格標題 -->
                <tr>
@@ -55,13 +58,9 @@
                     <th scope="col" class="itemNa">時間</th>
                 </tr>
             </thead>
-            <tbody id="stock">
-	            <div id="spinner">
-	                <span class="visually-hidden">Loading...</span>
-	            </div>
-	            <div id="analysis">
-            	
-   				</div>
+            <tbody>
+	            
+	            
             <!-- 表格內容 -->
             
         </tbody>
@@ -90,19 +89,17 @@
 			if(message.type == 'stocks' ) {
 				let stocks = message.content;
 				console.log(stocks);
-				$('#stock #analysis tr').remove();
+				$('#stock tbody tr').remove();
 				$('#spinner').addClass('d-none');
 				$.each(stocks, function(index,stock){
-					$('#stock #analysis').append(
+					$('#stock tbody').append(
 						`		  
 						   <tr>
-						    <th scope="row">${stock.stockName}</th>
+						      <th scope="row">${stock.stockName}</th>
 						      <td>${stock.stockNumber}</td>
 						      <td>${stock.price}</td>
 						      <td>${stock.priceChange}</td>
-						    <span class="badge bg-primary rounded-pill"> 
-								${stock.trading}
-							</span>
+						      <td>${stock.trading}</td>
 						  </tr>
 				  		`
 					);
