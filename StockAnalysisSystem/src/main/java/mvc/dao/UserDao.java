@@ -12,7 +12,7 @@ public interface UserDao {
 	List<User> findAllUsers();
 	
 //	2. 新增使用者
-	void addUser(User user);
+	int addUser(User user);
 	
 //	3. 修改密碼
 	Boolean updateUserPassword(Integer userId, String newPassword);
@@ -20,6 +20,8 @@ public interface UserDao {
 //	4. 根據使用者名稱查找使用者(登入用-單筆)
 	Optional<User> findUserByUsername(String username);
 	
+//	5. 根據使用者email查找使用者(註冊用-單筆)
+	Optional<User> findUserByEmail(String email);
 	
 	
 }

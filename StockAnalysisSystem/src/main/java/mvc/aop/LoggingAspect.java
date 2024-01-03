@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class LoggingAspect {
-	@Before("execution(* spring.mvc.group_buy.controller.*.*(..))")
+	@Before("execution(* mvc.controller.*.*(..))")
 	public void logMethodParams(JoinPoint joinPoint) {
 		String methodName = joinPoint.getSignature().getName();
 		Object[] args = joinPoint.getArgs();

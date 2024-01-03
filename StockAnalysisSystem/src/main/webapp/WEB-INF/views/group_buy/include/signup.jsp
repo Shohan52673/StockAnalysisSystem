@@ -38,72 +38,52 @@ form {
 	gap: 10px;
 	margin-top: 15px; /* 調整按鈕和表單的距離 */
 }
-
+.needs-validation{
+	border-top: 10px solid #df5334;
+}
 
 </style>
 </head>
 <body>
 
 	<div class="d-flex justify-content-center align-items-center vh-100">
-		<sp:form modelAttribute="user" class="needs-validation" novalidate method="post"
-			action="./success.jsp">
+		<sp:form modelAttribute="signupuser" class="needs-validation"  method="post"
+			action="${pageContext.request.contextPath}/mvc/group_buy/signup">
 			<h4 class="text-center">會員註冊</h4>
-			<%
-			if (error != null) {
-				out.print("<p class='text-center text-danger fw-bold'>" + error + "</p>");
-			}
-			%>
+			
+			<div>
+				<label for="username" class="form-label">姓名</label> 
+				<sp:input type="text" class="form-control" path="fullname"  value="" />
+				<sp:errors path="fullname" style="color: red; font-size:8px"/>
+			</div>
+			<div>
+				<label for="email" class="form-label">電子信箱</label> 
+				<sp:input type="email" class="form-control" path="email" value="" />
+				<sp:errors path="email" style="color: red; font-size:8px"/>
+				<div style="color: red; font-size:8px">${signupemail}</div>
+			</div>
 			<div>
 				<label for="username" class="form-label">會員帳號</label> 
-				<input type="text" class="form-control" id="username" name="username" value="" required>
-				<div class="invalid-feedback">請輸入有效會員名稱</div>
+				<sp:input type="text" class="form-control" path="username"  value="" />
+				<sp:errors path="username" style="color: red; font-size:8px"/>
+            <div style="color: red; font-size:8px">${signupname}</div>
 			</div>
 			<div>
-				<label for="email" class="form-label">電子信箱</label> <input
-					type="email" class="form-control" id="email" name="email" value=""
-					required>
-				<div class="invalid-feedback">請輸入有效的電子信箱</div>
+				<label for="password" class="form-label">會員密碼</label> 
+				<sp:input type="password" class="form-control" path="password" value="" />
+				<sp:errors path="password" style="color: red; font-size:8px"/>
 			</div>
 			<div>
-				<label for="password" class="form-label">會員密碼</label> <input
-					type="password" class="form-control" id="password" name="password"
-					value="" required>
-				<div class="invalid-feedback">請輸入密碼</div>
-			</div>
-			<div>
-				<label for="confirmPassword" class="form-label">密碼確認</label> <input
-					type="password" class="form-control" id="confirmPassword"
-					name="confirmPassword" value="" required>
-				<div class="invalid-feedback">請確認密碼</div>
+				<label for="confirmPassword" class="form-label">密碼確認</label>
+				<input type="password" class="form-control" id="comfirm_password"
+					name="comfirm_password" value="" >
+				<div style="color: red; font-size:8px">${comfirm_password}</div>
 			</div>
 			<div class="btn-container">
 				<a href="./login" class="btn btn-danger cancel-btn">取消</a>
-				<!-- <a href="./login" class="btn btn-primary" type="">註冊</a> -->
-				<button class="btn btn-primary" type="submit">註冊</button>
+				<button class="btn btn-primary submit" type="submit">註冊</button>
 			</div>
 		</sp:form>
 	</div>
- 
-	<script type="text/javascript">
-		//Example starter JavaScript for disabling form submissions if there are invalid fields
-		(function() {
-			'use strict'
-
-			// Fetch all the forms we want to apply custom Bootstrap validation styles to
-			var forms = document.querySelectorAll('.needs-validation')
-
-			// Loop over them and prevent submission
-			Array.prototype.slice.call(forms).forEach(function(form) {
-				form.addEventListener('submit', function(event) {
-					if (!form.checkValidity()) {
-						event.preventDefault()
-						event.stopPropagation()
-					}
-
-					form.classList.add('was-validated')
-				}, false)
-			})
-		})()
-	</script>
 </body>
 </html>

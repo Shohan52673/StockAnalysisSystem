@@ -32,8 +32,11 @@
     
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="stock">
         <table class="table table-striped">
+       			 <div id="spinner">
+	                <span class="visually-hidden">Loading...</span>
+	             </div>
             <thead>
                 <!-- 表格標題 -->
                <tr>
@@ -56,65 +59,68 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- 表格內容 -->
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">台積電</th>
-                    <td>222</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">聯發科</th>
-                    <td>22</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">鴻海</th>
-                    <td>22</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">中華電</th>
-                    <td>22</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">富邦金</th>
-                    <td>22</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">廣達</th>
-                    <td>22</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">台達電</th>
-                    <td>22</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">台朔化</th>
-                    <td>22</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">國泰永續高股息</th>
-                    <td>22</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">元大台灣 50</th>
-                    <td>22</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">富邦台50</th>
-                    <td >22</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">國泰台灣領袖50</th>
-                    <td >22</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">元大高股息</th>
-                    <td>22</td>
-                </tr>
-                <tr>
-                    <th scope="row" class="itemName" name="itemName">加權指</th>
-                    <td>22</td>
-                </tr>
-            </tbody>
+	            
+	            
+            <!-- 表格內容 -->
+            
+        </tbody>
         </table>
     </div>
+    
+    <script>
+		
+    $(function() {
+        // 使用jQuery的ajax函数从服务器获取数据
+        $.ajax({
+            url: 'http://localhost:8080/StockAnalysisSystem/mvc/stock',
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    });
+
+    // 创建WebSocket连接
+    var socket = new WebSocket('ws://localhost:8080/StockAnalysisSystem/mvc/websocket');
+
+    // 当WebSocket连接打开时触发的事件
+    socket.onopen = function() {
+        console.log('WebSocket连接已建立');
+    };
+
+    // 当WebSocket接收到消息时触发的事件
+    socket.onmessage = function(event) {
+        // 解析收到的JSON数据
+        let message = JSON.parse(event.data);
+        if (message.type == 'stocks') {
+            let stocks = message.content;
+            console.log(stocks);
+            
+            // 移除表格中已有的行
+            $('#stock tbody tr').remove();
+            // 隐藏加载状态
+            $('#spinner').addClass('d-none');
+            
+            // 遍历stocks数组，将数据添加到表格中
+            $.each(stocks, function(index, stock) {
+                $('#stock tbody').append(
+                    `<tr>
+                        <th scope="row">\${stock.stockName}</th>
+                        <td>\${stock.stockNumber}</td>
+                        <td>\${stock.price}</td>
+                        <td>\${stock.priceChange}</td>
+                        <td>\${stock.trading}</td>
+                    </tr>`
+                );
+            });
+        }
+    };
+
+    // 当WebSocket连接关闭时触发的事件
+    socket.onclose = function() {
+        console.log('WebSocket连接已关闭');
+    };
+
+
+	</script>
 </body>
 </html>

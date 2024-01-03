@@ -47,7 +47,7 @@ a {
     <div class="success-container">
         <div class="success-icon"><i class="bi bi-check-circle-fill"></i></div>
         <h5>註冊成功</h5>
-        <p><a href="../index.jsp">返回登入頁面</a></p>
+        <p><a href="./login">返回登入頁面</a></p>
     </div>
 </body>
 </html>
