@@ -69,47 +69,57 @@
     
     <script>
 		
-		$(function() {
-			$.ajax({
-		        url: 'http://localhost:8080/WebSocketDemo/mvc/stock',
-		        success: function ( data ){
-					console.log(data);
-		        }
-		    });
-		});
-		
-		var socket = new WebSocket('ws://localhost:8080/WebSocketDemo/mvc/websocket');
+    $(function() {
+        // 使用jQuery的ajax函数从服务器获取数据
+        $.ajax({
+            url: 'http://localhost:8080/StockAnalysisSystem/mvc/stock',
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    });
 
-		socket.onopen = function() {
-		    console.log('WebSocket連線已建立');
-		};
-		
-		socket.onmessage = function(event) {
-		    let message = JSON.parse(event.data);
-			if(message.type == 'stocks' ) {
-				let stocks = message.content;
-				console.log(stocks);
-				$('#stock tbody tr').remove();
-				$('#spinner').addClass('d-none');
-				$.each(stocks, function(index,stock){
-					$('#stock tbody').append(
-						`		  
-						   <tr>
-						      <th scope="row">${stock.stockName}</th>
-						      <td>${stock.stockNumber}</td>
-						      <td>${stock.price}</td>
-						      <td>${stock.priceChange}</td>
-						      <td>${stock.trading}</td>
-						  </tr>
-				  		`
-					);
-				});
-			}
-		};
-		
-		socket.onclose = function() {
-		    console.log('WebSocket連線已關閉');
-		};
+    // 创建WebSocket连接
+    var socket = new WebSocket('ws://localhost:8080/StockAnalysisSystem/mvc/websocket');
+
+    // 当WebSocket连接打开时触发的事件
+    socket.onopen = function() {
+        console.log('WebSocket连接已建立');
+    };
+
+    // 当WebSocket接收到消息时触发的事件
+    socket.onmessage = function(event) {
+        // 解析收到的JSON数据
+        let message = JSON.parse(event.data);
+        if (message.type == 'stocks') {
+            let stocks = message.content;
+            console.log(stocks);
+            
+            // 移除表格中已有的行
+            $('#stock tbody tr').remove();
+            // 隐藏加载状态
+            $('#spinner').addClass('d-none');
+            
+            // 遍历stocks数组，将数据添加到表格中
+            $.each(stocks, function(index, stock) {
+                $('#stock tbody').append(
+                    `<tr>
+                        <th scope="row">\${stock.stockName}</th>
+                        <td>\${stock.stockNumber}</td>
+                        <td>\${stock.price}</td>
+                        <td>\${stock.priceChange}</td>
+                        <td>\${stock.trading}</td>
+                    </tr>`
+                );
+            });
+        }
+    };
+
+    // 当WebSocket连接关闭时触发的事件
+    socket.onclose = function() {
+        console.log('WebSocket连接已关闭');
+    };
+
 
 	</script>
 </body>
