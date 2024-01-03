@@ -139,6 +139,7 @@ input{
 
           <sp:form  modelAttribute="loginuser" method="post" action="${pageContext.request.contextPath}/mvc/group_buy/login">
             <sp:input type="text" path="username" placeholder="帳號" />
+            <sp:errors path="username" cssClass="text-danger text-nowrap text-end" />
             <div style="color: red">${wrongUsername}</div>
             <div class="tab"></div>
             <sp:input type="password" path="password" placeholder="密碼" />
