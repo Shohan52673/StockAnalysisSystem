@@ -16,8 +16,13 @@
 
 	<mvc:annotation-driven />
 	
+<<<<<<< HEAD
 	<context:component-scan base-package="com.example, mvc" />
 	
+=======
+	<context:component-scan base-package="com.example,mvc" />
+
+>>>>>>> branch 'main' of https://github.com/Shohan52673/StockAnalysisSystem.git
 	<!-- 設定 Spring AOP 切面程式自動實現代理 -->
 	<!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->
 	
