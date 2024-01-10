@@ -7,11 +7,61 @@
 <title>Stock Analysis System</title>
 <%@ include file="./url.jspf"%>
 <style>
-.navbar-container {
-	padding-left: 10%;
-	padding-right: 10%;
-}
-</style>
+        .navbar-container {
+            padding-left: 10%;
+            padding-right: 10%;
+        }
+        .search-box{
+        	position: relative;
+        	background: #fff;
+        }
+        .input-group{
+        	display: flex;
+        	align-items: center;
+        	padding: 10px 20xp; 
+        }
+        
+        input{
+        	flex: 1;
+        	height: 37px;
+        	/* background: transparent; */
+        	outline: 0;
+        }
+        
+
+        .result-box {
+        	position: absolute;
+            top: 100%; /* 與輸入框的底部對齊 */
+            left: 0;
+            z-index: 1000; /* 確保 .result-box 在其他內容上方 */
+            border: 1px solid #ccc;
+            border-top: none; /* 移除上方邊框 */
+            background-color: #fff;
+            width: 80%; /* 寬度與輸入框相同 */
+            max-height: 300px;
+            overflow: scroll;
+        }
+
+        .result-box ul {
+            border-top: 1px solid #999;
+            padding: 15px 10px;
+            margin: 0;
+        }
+
+        .result-box ul li {
+            list-style: none;
+            border-radius: 3px;
+            padding: 15px 10px;
+            cursor: pointer;
+        }
+        .result-box ul li:hover{
+        	background: #e9f3ff;
+        }
+
+        
+
+       
+    </style>
 </head>
 <body>
 
@@ -44,14 +94,64 @@
 									here</a></li>
 						</ul></li>
 				</ul>
-				<form class="d-flex me-3">
-					<input class="form-control me-2" type="search" placeholder="搜尋代碼"
-						aria-label="Search">
-					<button class="btn btn-outline-success text-nowrap" type="submit">搜尋</button>
+				<form class="d-flex me-3" action="${pageContext.request.contextPath}/mvc/group_buy/fronted/search" method="get">
+   				 <div class="search-box">
+   				 <div class="input-group">
+   				 <input class="form-control me-2" type="search" id="searchSymbol" name="searchSymbol" placeholder="搜尋代碼" aria-label="Search" autocomplete="off">
+    			 <button class="btn btn-outline-success text-nowrap" type="submit"><i class="bi bi-search"></i></button>
+    			 </div>
+    			 
+    			 <div class="result-box">
+    			 
+    			 </div>
+    			 </div>
 				</form>
 				<div>
 				<%@ include file="./logout.jspf" %>
 				</div>
 	</nav>
+	
+	<script>
+		let availableKeywords = [
+			'2330 台積電',
+			'0050 元大台灣50',
+			'0056 富邦台50',
+			'2303 聯電',
+			'1216 統一',
+			'2886 兆豐金'
+		];
+		
+		const resultsBox = document.querySelector(".result-box");
+		const inputBox = document.getElementById("searchSymbol");
+		
+		inputBox.onkeyup = function() {
+			let result = [];
+			let input = inputBox.value;
+			if(input.length){
+				result = availableKeywords.filter((keyword)=>{
+					return keyword.toLowerCase().includes(input.toLowerCase());
+				});
+				console.log(result);
+			}
+			display(result);
+			if(!result.length){
+				resultsBox.innerHTML = '';
+			}
+		}
+		
+		function display(result){
+			const content = result.map((list)=>{
+				return "<li onclick=seleckInput(this)>" + list + "</li>";
+			});
+			
+			resultsBox.innerHTML = "<ul>" + content.join('') + "</ul>";
+		}
+		
+		function seleckInput(list){
+			inputBox.value = list.innerHTML;
+			resultsBox.innerHTML = '';
+		}
+	
+	</script>
 </body>
 </html>

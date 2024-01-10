@@ -36,18 +36,18 @@ public class SemiProductStockUtil {
         	Element stockName = li.selectFirst("div.Ell.Fz\\(14px\\).Fw\\(600\\).Lh\\(1\\.25\\).Whs\\(n\\).LineClamp\\(2\\,40px\\)");
         	Element stockNumber = li.selectFirst("div.C\\(\\$c-fuji-grey-j\\).Mt\\(4px\\).Ell.Fz\\(11px\\).Lh\\(12px\\).Pend\\(0px\\)");
         	Element priceDiv = li.selectFirst("span.Jc\\(fe\\).Fz\\(14px\\)");
-        	Element priceChangeDiv = li.selectFirst("span.Jc\\(fe\\).Fw\\(n\\).D\\(f\\).Ai\\(c\\)");
-        	Element tradingDiv = li.select("span.Jc\\(fe\\).Fz\\(14px\\)").get(1);
+        	Element changePercentageDiv = li.selectFirst("span.Jc\\(fe\\).Fw\\(n\\).D\\(f\\).Ai\\(c\\)");
+        	Element totalVolumeDiv = li.select("span.Jc\\(fe\\).Fz\\(14px\\)").get(1);
         	
         	System.out.format("股名:%-3s,股號:%-7s,股價:%-4s,漲跌:%-4s,成交量(張):%s%n", 
-        			stockName.text(),stockNumber.text(),priceDiv.text(),priceChangeDiv.text(),tradingDiv.text());
+        			stockName.text(),stockNumber.text(),priceDiv.text(),changePercentageDiv.text(),totalVolumeDiv.text());
         	semiProducts.add(
         		SemiProductStock.builder()
         			.stockName(stockName.text())
         			.stockNumber(stockNumber.text())
         			.price(priceDiv.text())
-        			.priceChange(priceChangeDiv.text())
-        			.trading(tradingDiv.text())
+        			.changePercentage(changePercentageDiv.text())
+        			.totalVolume(totalVolumeDiv.text())
         			.build()
         	);
         });

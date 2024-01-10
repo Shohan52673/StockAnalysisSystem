@@ -1,10 +1,36 @@
+
+drop table if exists user;
+-- 建立 User
+create table if not exists user(
+	userId int auto_increment primary key,
+    fullname varchar(50) not null,
+    email varchar(50) not null,
+    username varchar(50) unique not null,
+    password varchar(50) not null
+);
+
+INSERT INTO user (userId, fullname, email, username, password) VALUES
+(101,'張狼' ,'123@gmail.com', 'user123','pass123'),
+(102,'高通','456@yahoo.com.tw','user456' ,'pass456'),
+(103,'蕭丁棍','789@gmail.com','user789', 'pass789');
+
+DROP TABLE IF EXISTS SemiProductStock;
 create table if not exists SemiProductStock (
 	trx_id int not null, -- semi_product_stock_trx_seq
     stockName varchar(30),
     stockNumber varchar(30),
     price varchar(30),
-    priceChange varchar(30),
-	trading varchar(30),
+    openingPrice varchar(30),
+    highPrice varchar(30),
+    lowPrice varchar(30),
+    averagePrice varchar(30),
+    transactionAmountBillion varchar(30),
+    previousClosingPrice varchar(30),
+    changePercentage varchar(30),
+    changeP varchar(30),
+	totalVolume varchar(30),
+	previousVolume varchar(30),
+	amplitude varchar(30),
     createDate datetime default current_timestamp
 );
 

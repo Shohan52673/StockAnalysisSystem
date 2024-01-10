@@ -19,9 +19,27 @@ public class SemiProductStock {
 	
 	private String price;
 	
-	private String priceChange;
+	private String openingPrice;
 	
-	private String trading;
+	private String highPrice;
+	
+	private String lowPrice;
+	
+	private String averagePrice;
+	
+	private String transactionAmountBillion;
+	
+	private String previousClosingPrice;
+	
+	private String changePercentage;
+	
+	private String changeP;
+	
+	private String totalVolume;
+	
+	private String previousVolume;
+	
+	private String amplitude;
 	
 	@Override
 	public String toString() {

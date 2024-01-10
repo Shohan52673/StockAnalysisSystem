@@ -28,6 +28,21 @@ public class MainController {
 		return "group_buy/main";	
 	}
 	
+	@RequestMapping("/stcok")
+	public String stock(HttpSession session) {
+		// 1. 先找到 user 登入者
+					User user = (User)session.getAttribute("user");
+						System.out.println("stock頁面");
+				return "group_buy/frontend/stockProduct";
+	}
 	
+	@GetMapping("/search")
+	public String searchStock(HttpSession session) {
+		// 1. 先找到 user 登入者
+		User user = (User)session.getAttribute("user");
+		System.out.println("searchStock");
+		
+		return null;
+	}
 	
 }
