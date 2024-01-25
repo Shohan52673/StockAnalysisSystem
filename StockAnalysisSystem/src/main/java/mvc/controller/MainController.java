@@ -68,6 +68,8 @@ public class MainController {
 	    	User user = (User)session.getAttribute("user");
 	    	buyingList.setUserId(user.getUserId());
 	    	System.out.println(buyingList.toString());
+	    	
+	    	
 	        mainDao.addBuyingList(buyingList);
 	        System.out.println("stockData success" + buyingList);
 	        return "success"; // 或者返回其他你想要的成功信息

@@ -40,7 +40,7 @@ public class MainMySQL implements MainDao{
 
 	@Override
 	public Optional<BuyingList> findStockByStockName(String stockName) {
-		String sql = "select stockName, sum(quantity), sum(price) from stockanalysissystem.BuyingList where user_id = 101 group by stockName";
+		String sql = "SELECT stockName, SUM(quantity), SUM(price) FROM stockanalysissystem.BuyingList WHERE user_id = 101 AND stockName = ? GROUP BY stockName";
 		try {
 			BuyingList buyingList = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(BuyingList.class), stockName);
 			return Optional.ofNullable(buyingList);

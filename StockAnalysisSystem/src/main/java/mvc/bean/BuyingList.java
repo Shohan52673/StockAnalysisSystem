@@ -17,9 +17,9 @@ public class BuyingList {
 	
 	private String stockName;
 	
-	private String quantity;
+	private Integer quantity;
 	
-	private String price;
+	private Integer price;
 	
 	private Integer userId; 
 	
