@@ -23,5 +23,8 @@ public interface UserDao {
 //	5. 根據使用者email查找使用者(註冊用-單筆)
 	Optional<User> findUserByEmail(String email);
 	
+//	6.根據使用者Id差找使用者
+	Optional<User> findUserById(Integer userid);
+	
 	
 }

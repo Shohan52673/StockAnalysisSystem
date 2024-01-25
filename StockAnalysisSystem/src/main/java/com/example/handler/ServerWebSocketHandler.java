@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -15,13 +16,19 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.springframework.web.util.HtmlUtils;
 
-import com.example.dao.SemiProductStockDaoMySQL;
 import com.example.bean.SemiProductStock;
+import com.example.dao.SemiProductStockDao;
+import com.example.dao.SemiProductStockDaoMySQL;
+import com.example.jsoup.SemiProductStockUtil;
+import com.example.jsoup.StockQueryUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 @Component("serverWebSocketHandler")
 public class ServerWebSocketHandler extends TextWebSocketHandler {
+	
+	@Autowired
+	StockQueryUtil stockQueryUtil;
 
 	enum Prop {
 
@@ -102,7 +109,12 @@ public class ServerWebSocketHandler extends TextWebSocketHandler {
 
 	//@Scheduled(fixedRate = 10 * 1000) // 每 10 秒執行一次
 	public void sendPeriodicMessages() throws IOException {
-		List<SemiProductStock> semiProductStocks = semiProductStockDao.findLatestSemiProductStock();
+		
+		List<SemiProductStock> semiProductStocks = stockQueryUtil.getStockQueryUtil();
+		semiProductStockDao.save(semiProductStocks);
+		
+		System.out.println(semiProductStocks);
+		//List<SemiProductStock> semiProductStocks = semiProductStockDao.findLatestSemiProductStock();
 		for (WebSocketSession session : sessions) {
 			if (session.isOpen()) {
 				JsonObject stockObject = new JsonObject();

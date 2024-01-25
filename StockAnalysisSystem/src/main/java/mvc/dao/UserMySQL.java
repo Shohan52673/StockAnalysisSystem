@@ -63,6 +63,17 @@ public class UserMySQL implements UserDao{
 			return Optional.empty();
 		}
 	}
+//	6.根據使用者Id差找使用者
+	@Override
+	public Optional<User> findUserById(Integer userid) {
+		String sql = "select userId, fullname, email, username, password from stockanalysissystem.user where userId = ?";
+		try {
+			User user = jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<>(User.class), userid);
+			return Optional.ofNullable(user);
+		}catch (Exception e) {
+			return Optional.empty();
+		}
+	}
 	
 	
 	

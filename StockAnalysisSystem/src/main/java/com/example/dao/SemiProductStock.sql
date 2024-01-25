@@ -109,3 +109,6 @@ SELECT CURRVAL('semi_product_stock_trx_seq');
 
 SELECT NEXTVAL('semi_product_stock_trx_seq');  
 -- 查询指定sequence的下一个值  这里是获取TestSeq下一个值
+
+INSERT INTO StockAnalysisSystem.Symbol (stockSymbol) VALUES 
+('3481'),('00929'),('2353'),('2409'),('2609'),('00919'),('2303'),('2891'),('0056'),('00878'),('2330'),('006208'),('00922'),('1216'),('3209'),('2603'),('2356'),('0050');

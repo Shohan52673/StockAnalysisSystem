@@ -78,8 +78,8 @@
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item"><a class="nav-link active"
 						aria-current="page"
-						href="./WEB-INF/views/group_buy/frontend/main.jsp">首頁</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">自選股</a></li>
+						href="main.jsp">首頁</a></li>
+					<li class="nav-item"><a class="nav-link" href="./portfolio">我的庫存</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">台股</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">國際</a></li>
 					<li class="nav-item dropdown"><a

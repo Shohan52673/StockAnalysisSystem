@@ -1,6 +1,5 @@
 package mvc.bean;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
 import lombok.AllArgsConstructor;

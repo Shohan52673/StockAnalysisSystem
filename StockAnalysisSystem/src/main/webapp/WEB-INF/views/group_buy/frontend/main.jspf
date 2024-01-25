@@ -26,7 +26,20 @@
        	text-align: right;
        }
        
+       .modal-content{
+       	border-top: 10px solid #df5334;
+       }
        
+       /* 定義新的按鈕顏色 */
+		.btn-custom {
+		    background-color: #df5334;
+		    color: #ffffff; /* 設定文字顏色，根據需要調整 */
+		}
+
+		/* 鼠標懸停時的效果（可選） */
+		.btn-custom:hover {
+		    background-color: #a12312; /* 根據需要調整顏色 */
+		}
        
     </style>
     
@@ -64,8 +77,64 @@
         </table>
     </div>
     
+<!-- 在<body>中加入以下模態框的 HTML 代碼 -->
+<div class="modal" id="stockModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">股票購買</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- 股票詳細信息的表格 -->
+                <table class="table modal-table">
+                    <tr>
+        				<th>股票名稱</th>
+        				<td id="modalName"></td>
+    				</tr>
+    				 <tr>
+        				<th>個股價格</th>
+        				<td id="modalPrice"></td>
+    				</tr>
+   					<tr>
+        				
+    				</tr>
+                    <!-- 其他股票詳細信息的表格行 -->
+                </table>
+
+                <!-- 模擬購買的表單 -->
+                <form id="buyStockForm">
+                <div class="mb-3">
+                <label for="transactionType" class="form-label">股票買賣</label>
+                	<select id="transactionType" class="form-select" required>
+			            <option value="buy">購買</option>
+			            <option value="sell">販賣</option>
+        			</select>	
+        			</div>	
+                    <div class="mb-3">
+                        <label for="buyQuantity" class="form-label">數量</label>
+                        <input type="number" id="buyQuantity" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="totalPrice" class="form-label">總價</label>
+                        <p id="totalPrice">0</p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                <button type="button" class="btn btn-custom" onclick="buyStock()">購買</button>
+            </div>
+        </div>
+    </div>
+</div>
+    
     <script>
 		
+ // 全局變量用於保存股票價格
+    var currentStockPrice = 0;
+    var currentStockName = '';
+
     $(function() {
         // 使用jQuery的ajax函数从服务器获取数据
         $.ajax({
@@ -91,17 +160,17 @@
         if (message.type == 'stocks') {
             let stocks = message.content;
             console.log(stocks);
-            
+
             // 移除表格中已有的行
             $('#stock tbody tr').remove();
             // 隐藏加载状态
             $('#spinner').addClass('d-none');
-            
-         // 遍历stocks数组，将数据添加到表格中
+
+            // 遍历stocks数组，将数据添加到表格中
             $.each(stocks, function(index, stock) {
                 // 创建超链接
-                var link = $('<a>').attr('href', '${pageContext.request.contextPath}/mvc/group_buy/fronted/stcok').text(stock.stockName).css('color', 'black');;
-
+                var link = $('<a>').text(stock.stockName).css('color', 'black');
+                
                 // 添加表格行
                 $('#stock tbody').append(
                     $('<tr>').append(
@@ -120,6 +189,25 @@
                         $('<td>').text(stock.amplitude)
                     )
                 );
+
+             // 為超鏈接添加點擊事件
+                link.click(function() {
+                    // 將股票詳細信息填入模態框
+                    $('#modalName').text(stock.stockName);
+                    $('#modalPrice').text(stock.price);
+                    
+
+                    // 保存股票價格
+                    currentStockPrice = stock.price;
+                    currentStockName = stock.stockName;
+
+                    // 重置購買表單
+                    $('#buyQuantity').val('');
+                    $('#totalPrice').text('0');
+
+                    // 打開模態框
+                    $('#stockModal').modal('show');
+                });
             });
         }
     };
@@ -128,6 +216,75 @@
     socket.onclose = function() {
         console.log('WebSocket连接已关闭');
     };
+    
+ // 監聽數量輸入框的變化，實時更新總價格
+    $('#buyQuantity').on('input', updateTotalPrice);
+    
+ // 計算總價格並更新模態框
+    function updateTotalPrice() {
+        var quantity = $('#buyQuantity').val();
+        var totalPrice = Math.ceil(quantity * currentStockPrice);
+        
+     // 格式化價格，添加千位分隔符
+        var formattedPrice = totalPrice.toLocaleString();
+        $('#totalPrice').text(formattedPrice);
+    }
+
+ // 購買股票的函數
+    function buyStock() {
+        var quantity = $('#buyQuantity').val();
+        var totalPrice = $('#totalPrice').text();
+        var transactionType = $('#transactionType').val(); // 獲取操作類型
+
+        // 檢查數量是否為正數
+        if (quantity <= 0) {
+            alert('數量必須是正數');
+            return;
+        }
+        
+     // 將數量和總價設置為相應的負值
+        if (transactionType === 'sell') {
+            quantity = -quantity;
+            totalPrice = -totalPrice;
+        }
+
+        // 在此添加將購買或販賣股票的信息提交到後端的代碼
+        var data = {
+            quantity: quantity,
+            price: totalPrice,
+            stockName: currentStockName,
+            transactionType: transactionType // 將操作類型添加到提交的數據中
+        };
+
+        // 可以使用Ajax或表單提交，根據你的需求
+        $.ajax({
+            type: 'POST',
+            url: '${pageContext.request.contextPath}/mvc/group_buy/fronted/stockData', // 替換為實際的後端端點
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(response) {
+                console.log(data);
+                // 提交成功的處理，可以根據後端返回的結果進行相應的操作
+                alert('成功' + (transactionType === 'buy' ? '購買' : '販賣') + ' ' + currentStockName + '，' + quantity + ' 股，'+(transactionType === 'buy' ? '花費' : '獲得') + totalPrice + ' 元');
+                // 可以根據需要進行其他處理
+            },
+            error: function(error) {
+                // 提交失敗的處理，可以根據錯誤信息進行相應的操作
+                alert((transactionType === 'buy' ? '購買' : '販賣') + '失敗：' + error.responseText);
+                // 可以根據需要進行其他處理
+            }
+        }); 
+
+        // 關閉模態框
+        $('#stockModal').modal('hide');
+    }
+
+    // 監聽選擇的股票買賣類型的變化，實時更新按鈕的文字
+    $('#transactionType').on('change', function() {
+        var selectedTransactionType = $(this).val();
+        $('#stockModal .btn-custom').text(selectedTransactionType === 'buy' ? '購買' : '販賣');
+    });
+
 
 
 	</script>

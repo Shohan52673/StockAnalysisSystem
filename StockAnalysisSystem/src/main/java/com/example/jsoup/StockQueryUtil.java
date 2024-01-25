@@ -31,7 +31,7 @@ public class StockQueryUtil {
     	
     	for(StockSymbol stockSymbol: stockSymbols) {
     		
-    		System.out.println(stockSymbol);
+//    		System.out.println(stockSymbol);
            
 //    		String a = "0050.TW";
             String url = "https://tw.stock.yahoo.com/quote/" + stockSymbol.getStockSymbol();  // 取得的 stockSymbol
