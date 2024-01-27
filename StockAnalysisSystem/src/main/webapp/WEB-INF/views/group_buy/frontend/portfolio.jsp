@@ -53,7 +53,7 @@
             <tr>
                 <th scope="col">股票名稱</th>
                 <th scope="col">股</th>
-                <th scope="col">總價</th>
+                <th scope="col">價值</th>
             </tr>
         </thead>
         <tbody>

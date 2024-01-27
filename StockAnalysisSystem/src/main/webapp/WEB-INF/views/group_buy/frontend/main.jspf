@@ -40,6 +40,20 @@
 		.btn-custom:hover {
 		    background-color: #a12312; /* 根據需要調整顏色 */
 		}
+		
+		/* 調整按鈕樣式 */
+		custom-btn {
+		    width: 150px ; /* 設定按鈕寬度，根據需要調整 */
+		    background-color: #ffffff ;
+		    border: 2px solid #df5334 ; /* 添加邊框，根據需要調整顏色和寬度 */
+		    color: #000000 ; /* 設定文字顏色，根據需要調整 */
+		}
+
+		/* 鼠標懸停時的效果 */
+		custom-btn:hover {
+		    background-color: #df5334 !important; /* 鼠標懸停時的背景顏色，根據需要調整 */
+		    color: #ffffff ; /* 鼠標懸停時的文字顏色，根據需要調整 */
+		}
        
     </style>
     
@@ -50,6 +64,7 @@
        			 <div id="spinner">
 	                <span class="visually-hidden">Loading...</span>
 	             </div>
+	             <div id="someElementId">${semiOptional}</div>
             <thead>
                 <!-- 表格標題 -->
                <tr>
@@ -66,6 +81,7 @@
                     <th scope="col" class="itemNa">總量</th>
                     <th scope="col" class="itemNa">昨日交易量</th>
                     <th scope="col" class="itemNa">振幅</th>
+                    <th scope="col" class="itemNa">加入自選</th>
                 </tr>
             </thead>
             <tbody>
@@ -186,7 +202,39 @@
                         $('<td>').text(stock.changeP),
                         $('<td>').text(stock.totalVolume),
                         $('<td>').text(stock.previousVolume),
-                        $('<td>').text(stock.amplitude)
+                        $('<td>').text(stock.amplitude),
+                        $('<td>').append(
+                                $('<button class="custom-btn btn-sm ">').text('+').on('click', function() {
+                                    // 添加你的“加入自選”按钮的点击事件处理逻辑
+                                    // 可以在这里执行你的操作，例如弹出提示框或触发其他事件
+                                    console.log('try to add to Watchlist clicked for ' + stock.stockName);
+ //                                   alert('成功將'+ stock.stockName + '加入清單')
+                                   // window.location.href='${pageContext.request.contextPath}/mvc/group_buy/fronted/stockProduck';
+                                 // 使用Ajax發送請求到後端
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '${pageContext.request.contextPath}/mvc/group_buy/fronted/watchlist',
+                                        contentType: 'application/json',
+                                        data: JSON.stringify({
+                                            stockName: stock.stockName
+                                        }),
+                                        success: function(response) {
+                                            // 在這裡處理從後端收到的數據
+                                            alert(response);
+//                                            window.location.href = '${pageContext.request.contextPath}/mvc/group_buy/fronted/main';
+
+                                            // 例如，你可以跳轉到一個新的頁面，將數據傳遞給該頁面
+                                            // window.location.href = '新的頁面URL';
+                                            
+                                            //$('#someElementId').text(response);
+                                        },
+                                        error: function(error) {
+                                        	console.log(response);
+                                            console.log('Error2:', error);
+                                        }
+                                    });
+                                })
+                            )
                     )
                 );
 
@@ -265,7 +313,7 @@
             success: function(response) {
                 console.log(data);
                 // 提交成功的處理，可以根據後端返回的結果進行相應的操作
-                alert('成功' + (transactionType === 'buy' ? '購買' : '販賣') + ' ' + currentStockName + '，' + quantity + ' 股，'+(transactionType === 'buy' ? '花費' : '獲得') + totalPrice + ' 元');
+                alert('成功' + (transactionType === 'buy' ? '購買' : '販賣') + ' ' + currentStockName + '，' + Math.abs(quantity) + ' 股，'+(transactionType === 'buy' ? '花費' : '獲得') + Math.abs(totalPrice) + ' 元');
                 // 可以根據需要進行其他處理
             },
             error: function(error) {

@@ -27,8 +27,9 @@ DROP TABLE IF EXISTS BuyingList;
 CREATE TABLE IF NOT EXISTS BuyingList(
 	stockListId int auto_increment primary key,
     stockName VARCHAR(30) NOT NULL,
-    quantity VARCHAR(30) NOT NULL,
-    price VARCHAR(30) NOT NULL
+    quantity int NOT NULL,
+    price int NOT NULL,
+    user_id int NOT NULL
 );
 
 DROP TABLE IF EXISTS SemiProductStock;

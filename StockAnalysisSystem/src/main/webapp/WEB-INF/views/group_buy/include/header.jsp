@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Stock Analysis System</title>
+<title>Stock Trading System</title>
 <%@ include file="./url.jspf"%>
 <style>
         .navbar-container {
@@ -67,7 +67,7 @@
 
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<div class="container-fluid navbar-container">
-			<a class="navbar-brand" href="#">股票分析系統</a>
+			<a class="navbar-brand" href="#">股票交易系統</a>
 			<button class="navbar-toggler d-{xl, xxl}-none" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
 				aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -80,7 +80,7 @@
 						aria-current="page"
 						href="main.jsp">首頁</a></li>
 					<li class="nav-item"><a class="nav-link" href="./portfolio">我的庫存</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">台股</a></li>
+					<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/mvc/group_buy/fronted/watchlist">自選股</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">國際</a></li>
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
@@ -93,7 +93,7 @@
 							<li><a class="dropdown-item" href="#">Something else
 									here</a></li>
 						</ul></li>
-				</ul>
+						</ul>
 				<form class="d-flex me-3" action="${pageContext.request.contextPath}/mvc/group_buy/fronted/search" method="get">
    				 <div class="search-box">
    				 <div class="input-group">
