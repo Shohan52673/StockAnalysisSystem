@@ -13,15 +13,33 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
+    	
+    	body{
+    		background-color: black;
+    	}
+    	
        .itemName{
        	word-wrap: break-word;  /* 換行 */
         word-break: break-all;  /* 當單字超出容器時斷開 */
         max-width: 5.5ch;  /* 設定最大寬度為 4 中文字 */
         text-align:center;
+        color: white;
        }
        .itemNa{
        		text-align: right;
+       		color: white;
        }
+       
+       thead {
+    background-color: #333333;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+
+
+	
        td{
        	text-align: right;
        }
@@ -185,11 +203,10 @@
             // 遍历stocks数组，将数据添加到表格中
             $.each(stocks, function(index, stock) {
                 // 创建超链接
-                var link = $('<a>').text(stock.stockName).css('color', 'black');
+                var link = $('<a>').text(stock.stockName).css('color', 'white');
                 
-                // 添加表格行
-                $('#stock tbody').append(
-                    $('<tr>').append(
+                
+                		var tableRow = $('<tr>').append(
                         $('<th scope="row">').append(link),
                         $('<td>').text(stock.price),
                         $('<td>').text(stock.openingPrice),
@@ -234,10 +251,27 @@
                                         }
                                     });
                                 })
-                            )
+                            
                     )
                 );
 
+             // 根據成交價和昨收價比較，設置字體顏色
+                var priceColor = 'black';
+                if (stock.price > stock.previousClosingPrice) {
+                    priceColor = '#FF0000';
+                } else if (stock.price < stock.previousClosingPrice) {
+                    priceColor = '#00FF00';
+                } else {
+                    priceColor = '#FFFF00';
+                }
+
+                // 將字體顏色應用到表格行的每一列
+                tableRow.find('td').css('color', priceColor);
+
+                // 將表格行添加到表格中
+                $('#stock tbody').append(tableRow);
+                
+                
              // 為超鏈接添加點擊事件
                 link.click(function() {
                     // 將股票詳細信息填入模態框
@@ -271,7 +305,10 @@
  // 計算總價格並更新模態框
     function updateTotalPrice() {
         var quantity = $('#buyQuantity').val();
-        var totalPrice = Math.ceil(quantity * currentStockPrice);
+        var totalPrice = Math.ceil(parseFloat(quantity) * currentStockPrice);
+        
+     // 保存實際的數值，而不是格式化後的字符串
+        $('#totalPrice').data('actualValue', totalPrice);
         
      // 格式化價格，添加千位分隔符
         var formattedPrice = totalPrice.toLocaleString();
@@ -281,7 +318,8 @@
  // 購買股票的函數
     function buyStock() {
         var quantity = $('#buyQuantity').val();
-        var totalPrice = $('#totalPrice').text();
+        var originalTotalPrice = $('#totalPrice').text(); // 保存原始值
+        var totalPrice = originalTotalPrice.replace(/,/g, ''); // 將 totalPrice 轉換為數值
         var transactionType = $('#transactionType').val(); // 獲取操作類型
 
         // 檢查數量是否為正數
@@ -289,8 +327,11 @@
             alert('數量必須是正數');
             return;
         }
+		
+        // 修正 totalprice，確保它是一個整數
+        totalPrice = Math.round(totalPrice);
         
-     // 將數量和總價設置為相應的負值
+        // 將數量和總價設置為相應的負值
         if (transactionType === 'sell') {
             quantity = -quantity;
             totalPrice = -totalPrice;
@@ -312,8 +353,10 @@
             data: JSON.stringify(data),
             success: function(response) {
                 console.log(data);
+                var formattedTotalPrice = originalTotalPrice; // 保存格式化的值
+
                 // 提交成功的處理，可以根據後端返回的結果進行相應的操作
-                alert('成功' + (transactionType === 'buy' ? '購買' : '販賣') + ' ' + currentStockName + '，' + Math.abs(quantity) + ' 股，'+(transactionType === 'buy' ? '花費' : '獲得') + Math.abs(totalPrice) + ' 元');
+                alert('成功' + (transactionType === 'buy' ? '購買' : '販賣') + ' ' + currentStockName + '，' + Math.abs(quantity) + ' 股，'+(transactionType === 'buy' ? '花費' : '獲得') + ' ' + formattedTotalPrice + ' 元');
                 // 可以根據需要進行其他處理
             },
             error: function(error) {
@@ -321,18 +364,18 @@
                 alert((transactionType === 'buy' ? '購買' : '販賣') + '失敗：' + error.responseText);
                 // 可以根據需要進行其他處理
             }
-        }); 
+        });
 
         // 關閉模態框
         $('#stockModal').modal('hide');
     }
+
 
     // 監聽選擇的股票買賣類型的變化，實時更新按鈕的文字
     $('#transactionType').on('change', function() {
         var selectedTransactionType = $(this).val();
         $('#stockModal .btn-custom').text(selectedTransactionType === 'buy' ? '購買' : '販賣');
     });
-
 
 
 	</script>

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.stereotype.Controller;
@@ -131,11 +132,10 @@ public class UserController {
 		Optional<User> userOptional = userdao.findUserByUsername(loginUser.getUsername());
 		if(userOptional.isPresent()) {
 			User dbuser = userOptional.get();
-			// 比對 password
-			if(dbuser.getPassword().equals(loginUser.getPassword())) {
+			// 比對&驗證 password
+			if(BCrypt.checkpw(loginUser.getPassword(),dbuser.getPassword())) {
 				session.setAttribute("user", dbuser);// 將 user 物件放入到 session 變數中
 				System.out.println("登入成功");
-//				return "redirect:/mvc/group_buy/main";// OK, 導向前台首頁
 				return "redirect:/mvc/group_buy/fronted/main";
 			}else {
 				session.invalidate();// session 過期失效
@@ -143,6 +143,19 @@ public class UserController {
 				System.out.println("密碼錯誤！");
 				return"group_buy/login";
 			}
+					
+					
+//			if(dbuser.getPassword().equals(loginUser.getPassword())) {
+//				session.setAttribute("user", dbuser);// 將 user 物件放入到 session 變數中
+//				System.out.println("登入成功");
+////				return "redirect:/mvc/group_buy/main";// OK, 導向前台首頁
+//				return "redirect:/mvc/group_buy/fronted/main";
+//			}else {
+//				session.invalidate();// session 過期失效
+//				model.addAttribute("wrongPassword", "密碼錯誤！");
+//				System.out.println("密碼錯誤！");
+//				return"group_buy/login";
+//			}
 		}else {
 			session.invalidate();// session 過期失效
 			model.addAttribute("wrongUsername", "帳號錯誤！");
@@ -196,11 +209,15 @@ public class UserController {
 			  System.out.println("錯誤，帳號已存在！");
 			  return "group_buy/include/signup";
 		  	}
-		  		if(signupuser.getPassword().equals(comfirm_password)) {
+		  	if(signupuser.getPassword().equals(comfirm_password)) {
+		  		//加密密碼
+		  		String hashedPassword = BCrypt.hashpw(signupuser.getPassword(), BCrypt.gensalt());
+		  		
+		  		
 		  				user.setFullname(signupuser.getFullname());
 		  				user.setEmail(signupuser.getEmail());	
 		  				user.setUsername(signupuser.getUsername());
-		  				user.setPassword(signupuser.getPassword());
+		  				user.setPassword(hashedPassword);
 		  			
 		  				int rowcount = userdao.addUser(user);
 		  				if(rowcount > 0) {
@@ -254,15 +271,15 @@ public class UserController {
 					
 					try {
 	                    // 使用 Gmail 來發送郵件
-	                    GMail mail = new GMail("a832k7025079@gmail.com", "gwxr jjuf snsi duev");
+	                    GMail mail = new GMail("a832k7025079@gmail.com", "hbdx zmll wbez rgcs");
 
 	                    mail.from("a832k7025079@gmail.com")
 	        		    .to(resetPassword.getEmail())
 //	                    .to("a832k7025079@gmail.com")
 	        		    .cc("a832k7025079@gmail.com")
-	        		    .personal("柯林")
+	        		    .personal("系統")
 	        		    .subject("測試信件")
-	        		    .context("密碼："+ generateRandomString(8))
+	        		    .context("暫時密碼："+ generateRandomString(8))
 //	        		    .attachement(Path.of(GmailDemo.class.getClassLoader().getResource("123.txt").toURI()))
 	        		    .send();
 	                   

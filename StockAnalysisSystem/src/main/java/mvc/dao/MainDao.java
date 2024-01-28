@@ -1,6 +1,7 @@
 package mvc.dao;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.example.bean.SemiProductStock;
@@ -30,4 +31,6 @@ public interface MainDao {
 	 
 	 //透過股票名稱從自選清單刪除一筆資料
 	 Boolean removeOneWatchlistByStockName(String stockName, Integer userId);
+	 
+	 
 }

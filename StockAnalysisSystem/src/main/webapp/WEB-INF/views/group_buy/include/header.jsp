@@ -7,6 +7,9 @@
 <title>Stock Trading System</title>
 <%@ include file="./url.jspf"%>
 <style>
+
+
+		
         .navbar-container {
             padding-left: 10%;
             padding-right: 10%;
@@ -58,7 +61,10 @@
         	background: #e9f3ff;
         }
 
-        
+        body {
+    background-color: #333333; /* 背景顏色 */
+    color: white; /* 字體顏色 */
+}
 
        
     </style>

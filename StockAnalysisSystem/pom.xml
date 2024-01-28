@@ -290,6 +290,7 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.mindrot/jbcrypt -->
+		<!-- 密碼加密-->
 		<dependency>
 			<groupId>org.mindrot</groupId>
 			<artifactId>jbcrypt</artifactId>

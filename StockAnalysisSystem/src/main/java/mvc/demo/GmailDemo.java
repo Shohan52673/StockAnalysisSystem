@@ -12,7 +12,7 @@ public class GmailDemo {
 
 	public static void main(String[] args) throws URISyntaxException {
 		//gwxr jjuf snsi duev
-		GMail mail = new GMail("a832k7025079@gmail.com", "gwxr jjuf snsi duev");
+		GMail mail = new GMail("a832k7025079@gmail.com", "hbdx zmll wbez rgcs");
 		
 		mail.from("a832k7025079@gmail.com")
 		    .to("a832k7025079@gmail.com")
