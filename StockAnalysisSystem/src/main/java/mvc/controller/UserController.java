@@ -279,7 +279,7 @@ public class UserController {
 	        		    .cc("a832k7025079@gmail.com")
 	        		    .personal("系統")
 	        		    .subject("測試信件")
-	        		    .context("暫時密碼："+ generateRandomString(8))
+	        		    .context("一次性密碼："+ generateRandomString(8))
 //	        		    .attachement(Path.of(GmailDemo.class.getClassLoader().getResource("123.txt").toURI()))
 	        		    .send();
 	                   

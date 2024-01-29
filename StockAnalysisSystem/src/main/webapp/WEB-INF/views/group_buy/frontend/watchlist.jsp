@@ -1,3 +1,4 @@
+<%@page import="com.example.bean.Watchlist"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -86,18 +87,18 @@
                 <c:forEach var="stock" items="${watchlist}">
                     <tr>
                         <td style="color : white;">${stock.stockName}</td>
-                        <td class="item" style="color : green;">${stock.price}</td>
-                        <td class="item" style="color : green;">${stock.openingPrice}</td>
-                        <td class="item" style="color : green;">${stock.highPrice}</td>
-                        <td class="item" style="color : green;">${stock.lowPrice}</td>
-                        <td class="item" style="color : green;">${stock.averagePrice}</td>
-                        <td class="item" style="color : green;">${stock.transactionAmountBillion}</td>
-                        <td class="item" style="color : green;">${stock.previousClosingPrice}</td>
-                        <td class="item" style="color : green;">${stock.changePercentage}</td>
-                        <td class="item" style="color : green;">${stock.changeP}</td>
-                        <td class="item" style="color : green;">${stock.totalVolume}</td>
-                        <td class="item" style="color : green;">${stock.previousVolume}</td>
-                        <td class="item" style="color : green;">${stock.amplitude}</td>
+                        <td class="item" style="color: <%=getFontColor(((Watchlist)pageContext.getAttribute("stock")).getPrice(), ((Watchlist)pageContext.getAttribute("stock")).getPreviousClosingPrice())%>">${stock.price}</td>
+                        <td class="item" style="color: <%=getFontColor(((Watchlist)pageContext.getAttribute("stock")).getPrice(), ((Watchlist)pageContext.getAttribute("stock")).getPreviousClosingPrice())%>">${stock.openingPrice}</td>
+                        <td class="item" style="color: <%=getFontColor(((Watchlist)pageContext.getAttribute("stock")).getPrice(), ((Watchlist)pageContext.getAttribute("stock")).getPreviousClosingPrice())%>">${stock.highPrice}</td>
+                        <td class="item" style="color: <%=getFontColor(((Watchlist)pageContext.getAttribute("stock")).getPrice(), ((Watchlist)pageContext.getAttribute("stock")).getPreviousClosingPrice())%>">${stock.lowPrice}</td>
+                        <td class="item" style="color: <%=getFontColor(((Watchlist)pageContext.getAttribute("stock")).getPrice(), ((Watchlist)pageContext.getAttribute("stock")).getPreviousClosingPrice())%>">${stock.averagePrice}</td>
+                        <td class="item" style="color: <%=getFontColor(((Watchlist)pageContext.getAttribute("stock")).getPrice(), ((Watchlist)pageContext.getAttribute("stock")).getPreviousClosingPrice())%>">${stock.transactionAmountBillion}</td>
+                        <td class="item" style="color: <%=getFontColor(((Watchlist)pageContext.getAttribute("stock")).getPrice(), ((Watchlist)pageContext.getAttribute("stock")).getPreviousClosingPrice())%>">${stock.previousClosingPrice}</td>
+                        <td class="item" style="color: <%=getFontColor(((Watchlist)pageContext.getAttribute("stock")).getPrice(), ((Watchlist)pageContext.getAttribute("stock")).getPreviousClosingPrice())%>">${stock.changePercentage}</td>
+                        <td class="item" style="color: <%=getFontColor(((Watchlist)pageContext.getAttribute("stock")).getPrice(), ((Watchlist)pageContext.getAttribute("stock")).getPreviousClosingPrice())%>">${stock.changeP}</td>
+                        <td class="item" style="color: <%=getFontColor(((Watchlist)pageContext.getAttribute("stock")).getPrice(), ((Watchlist)pageContext.getAttribute("stock")).getPreviousClosingPrice())%>">${stock.totalVolume}</td>
+                        <td class="item" style="color: <%=getFontColor(((Watchlist)pageContext.getAttribute("stock")).getPrice(), ((Watchlist)pageContext.getAttribute("stock")).getPreviousClosingPrice())%>">${stock.previousVolume}</td>
+                        <td class="item" style="color: <%=getFontColor(((Watchlist)pageContext.getAttribute("stock")).getPrice(), ((Watchlist)pageContext.getAttribute("stock")).getPreviousClosingPrice())%>">${stock.amplitude}</td>
                         <td class="item">
                             <a href="javascript:void(0);" onclick="removeOneWatchlist('${stock.stockName}')">
                                 <button class="custom-btn btn-sm">Ｘ</button>
@@ -109,17 +110,24 @@
         </table>
     </div>
     
+    <%!
+    
+    	private String getFontColor(String price, String previousClosingPrice) {
+	    	// 將String轉換為double
+	        double priceValue = Double.parseDouble(price);
+	        double previousClosingPriceValue = Double.parseDouble(previousClosingPrice);
+	        if (priceValue > previousClosingPriceValue) {
+	            return "red";
+	        } else if (priceValue < previousClosingPriceValue) {
+	            return "green";
+	        } else {
+	            return "yellow";
+	        }
+    	}
+    
+    %>
+    
     <script type="text/javascript">
-
-        function getFontColor(price, previousClosingPrice) {
-            if (parseFloat(price) > parseFloat(previousClosingPrice)) {
-                return 'red';
-            } else if (parseFloat(price) < parseFloat(previousClosingPrice)) {
-                return 'green';
-            } else {
-                return 'yellow';
-            }
-        }
 	
 		 function removeOneWatchlist(stockName) {
 			window.location.href='${pageContext.request.contextPath}/mvc/group_buy/fronted/removeOneWatchlist?stockName=' + stockName;

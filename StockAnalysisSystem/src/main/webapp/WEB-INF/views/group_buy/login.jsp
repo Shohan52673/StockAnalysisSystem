@@ -100,7 +100,7 @@ input{
 </head>
 <body>
     <div class="system_name">
-      <h2>○○系統</h2>
+      <!-- <h2>○○系統</h2> -->
     </div>
     
     <div class="login_page">
